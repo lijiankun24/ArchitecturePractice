@@ -1,6 +1,7 @@
 package com.lijiankun24.architecturepractice.db.entity;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 /**
@@ -25,13 +26,23 @@ public class Girl {
     public Girl() {
     }
 
-
     public Girl(Girl girl) {
         this.mId = girl.getId();
         this.mName = girl.getName();
         this.mAge = girl.getAge();
         this.mFrom = girl.getFrom();
         this.mAvatar = girl.getAvatar();
+    }
+
+    @Ignore
+    public Girl(String id, String name,
+                String avatar, int age,
+                String from) {
+        mId = id;
+        mName = name;
+        mAvatar = avatar;
+        mAge = age;
+        mFrom = from;
     }
 
     public String getId() {

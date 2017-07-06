@@ -44,14 +44,14 @@ public class GirlListAdapter extends RecyclerView.Adapter<GirlListAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Girl girl = mGirlList.get(position);
-        holder.mTVGirlName.setText(girl.getName());
-        holder.mTVGirlAge.setText(girl.getAge());
-        Glide.with(holder.mIVGirlAvatar.getContext())
+        holder.getTVGirlName().setText(girl.getName());
+        holder.getTVGirlAge().setText(String.valueOf(girl.getAge()));
+        Glide.with(holder.getIVGirlAvatar().getContext())
                 .load(girl.getAvatar())
                 .error(R.drawable.ic_launcher)
                 .centerCrop()
-                .into(holder.mIVGirlAvatar);
-        holder.mRoot.setOnClickListener(new View.OnClickListener() {
+                .into(holder.getIVGirlAvatar());
+        holder.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mGirlClickListener != null) {
@@ -68,24 +68,40 @@ public class GirlListAdapter extends RecyclerView.Adapter<GirlListAdapter.ViewHo
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final View mRoot;
+        private View mRoot;
 
-        private final TextView mTVGirlName;
+        private TextView mTVGirlName;
 
-        private final TextView mTVGirlAge;
+        private TextView mTVGirlAge;
 
-        private final ImageView mIVGirlAvatar;
+        private ImageView mIVGirlAvatar;
 
         ViewHolder(View view) {
             super(view);
 
             mRoot = view.findViewById(R.id.rl_girl_item_root);
 
-            mTVGirlName = view.findViewById(R.id.tv_girl_name);
+            mTVGirlName = (TextView) view.findViewById(R.id.tv_girl_name);
 
-            mTVGirlAge = view.findViewById(R.id.tv_girl_age);
+            mTVGirlAge = (TextView) view.findViewById(R.id.tv_girl_age);
 
-            mIVGirlAvatar = view.findViewById(R.id.iv_girl_avatar);
+            mIVGirlAvatar = (ImageView) view.findViewById(R.id.iv_girl_avatar);
+        }
+
+        public View getRoot() {
+            return mRoot;
+        }
+
+        public TextView getTVGirlName() {
+            return mTVGirlName;
+        }
+
+        public TextView getTVGirlAge() {
+            return mTVGirlAge;
+        }
+
+        public ImageView getIVGirlAvatar() {
+            return mIVGirlAvatar;
         }
     }
 }

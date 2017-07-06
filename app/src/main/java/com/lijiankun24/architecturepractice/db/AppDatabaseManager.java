@@ -15,6 +15,8 @@ import android.support.annotation.Nullable;
 
 public class AppDatabaseManager {
 
+    private static final String DATABASE_NAME = "architecture-practice-db";
+
     private static AppDatabaseManager INSTANCE = null;
 
     private final MutableLiveData<Boolean> mIsDatabaseCreated = new MutableLiveData<>();
@@ -50,9 +52,11 @@ public class AppDatabaseManager {
             @Override
             protected Void doInBackground(Context... params) {
                 Context context = params[0].getApplicationContext();
-                context.deleteDatabase(AppDatabase.DATABASE_NAME);
+                context.deleteDatabase(DATABASE_NAME);
                 AppDatabase db = Room.databaseBuilder(context,
-                        AppDatabase.class, AppDatabase.DATABASE_NAME).build();
+                        AppDatabase.class, DATABASE_NAME).build();
+
+                DatabseUtil.initializeDb(db);
 
                 mDB = db;
                 return null;
