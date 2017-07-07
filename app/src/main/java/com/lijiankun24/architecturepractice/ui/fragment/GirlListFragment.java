@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lijiankun24.architecturepractice.R;
-import com.lijiankun24.architecturepractice.db.entity.Girl;
+import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
 import com.lijiankun24.architecturepractice.ui.activity.MainActivity;
 import com.lijiankun24.architecturepractice.ui.adapter.GirlListAdapter;
 import com.lijiankun24.architecturepractice.ui.listener.OnGirlClickListener;

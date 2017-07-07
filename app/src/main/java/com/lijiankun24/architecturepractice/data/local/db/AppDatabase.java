@@ -1,10 +1,10 @@
-package com.lijiankun24.architecturepractice.db;
+package com.lijiankun24.architecturepractice.data.local.db;
 
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 
-import com.lijiankun24.architecturepractice.db.dao.GirlDao;
-import com.lijiankun24.architecturepractice.db.entity.Girl;
+import com.lijiankun24.architecturepractice.data.local.db.dao.GirlDao;
+import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
 
 /**
  * AppDatabase.java

@@ -10,8 +10,8 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
-import com.lijiankun24.architecturepractice.db.AppDatabaseManager;
-import com.lijiankun24.architecturepractice.db.entity.Girl;
+import com.lijiankun24.architecturepractice.data.local.db.AppDatabaseManager;
+import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
 
 /**
  * GirlViewModel.java

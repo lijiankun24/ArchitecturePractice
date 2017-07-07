@@ -7,8 +7,8 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 
-import com.lijiankun24.architecturepractice.db.AppDatabaseManager;
-import com.lijiankun24.architecturepractice.db.entity.Girl;
+import com.lijiankun24.architecturepractice.data.local.db.AppDatabaseManager;
+import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.lijiankun24.architecturepractice.ui.listener;
 
-import com.lijiankun24.architecturepractice.db.entity.Girl;
+import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
 
 /**
  * OnGirlClickListener.java

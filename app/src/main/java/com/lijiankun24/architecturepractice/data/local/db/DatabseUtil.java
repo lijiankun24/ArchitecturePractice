@@ -1,6 +1,6 @@
-package com.lijiankun24.architecturepractice.db;
+package com.lijiankun24.architecturepractice.data.local.db;
 
-import com.lijiankun24.architecturepractice.db.entity.Girl;
+import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
 
 import java.util.ArrayList;
 import java.util.List;

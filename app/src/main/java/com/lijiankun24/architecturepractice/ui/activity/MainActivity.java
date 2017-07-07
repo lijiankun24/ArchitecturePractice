@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.lijiankun24.architecturepractice.R;
-import com.lijiankun24.architecturepractice.db.entity.Girl;
+import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
 import com.lijiankun24.architecturepractice.ui.fragment.GirlFragment;
 import com.lijiankun24.architecturepractice.ui.fragment.GirlListFragment;
 

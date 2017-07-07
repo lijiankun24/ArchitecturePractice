@@ -1,4 +1,4 @@
-package com.lijiankun24.architecturepractice.db;
+package com.lijiankun24.architecturepractice.data.local.db;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;

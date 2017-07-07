@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.lijiankun24.architecturepractice.R;
-import com.lijiankun24.architecturepractice.db.entity.Girl;
+import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
 import com.lijiankun24.architecturepractice.ui.listener.OnGirlClickListener;
 
 import java.util.List;
