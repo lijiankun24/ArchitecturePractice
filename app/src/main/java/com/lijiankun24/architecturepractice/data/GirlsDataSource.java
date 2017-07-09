@@ -24,4 +24,6 @@ public interface GirlsDataSource {
     void getGirls(@NonNull LoadGirlsCallback callback);
 
     Girl getGirl(@NonNull String id);
+
+    void refreshTasks();
 }

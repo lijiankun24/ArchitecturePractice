@@ -1,16 +1,13 @@
 package com.lijiankun24.architecturepractice.viewmodel;
 
 import android.app.Application;
-import android.arch.core.util.Function;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
-import com.lijiankun24.architecturepractice.data.local.db.AppDatabaseManager;
 import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
 
 /**
@@ -27,7 +24,7 @@ public class GirlViewModel extends AndroidViewModel {
         ABSENT.setValue(null);
     }
 
-    private final LiveData<Girl> mGirlLiveData;
+    private final LiveData<Girl> mGirlLiveData = new MutableLiveData<>();
 
     public Girl mGirl;
 
@@ -38,20 +35,20 @@ public class GirlViewModel extends AndroidViewModel {
         super(application);
         this.mGirlId = girlId;
 
-        final AppDatabaseManager manager = AppDatabaseManager.getInstance();
-
-        mGirlLiveData = Transformations.switchMap(manager.isDatabaseCreated(), new Function<Boolean, LiveData<Girl>>() {
-            @Override
-            public LiveData<Girl> apply(Boolean input) {
-                if (!Boolean.TRUE.equals(input)) {
-                    return ABSENT;
-                } else {
-                    return manager.getDB().girlDao().loadGirl(mGirlId);
-                }
-            }
-        });
-
-        manager.createDB(application);
+//        final AppDatabaseManager manager = AppDatabaseManager.getInstance();
+//
+//        mGirlLiveData = Transformations.switchMap(manager.isDatabaseCreated(), new Function<Boolean, LiveData<Girl>>() {
+//            @Override
+//            public LiveData<Girl> apply(Boolean input) {
+//                if (!Boolean.TRUE.equals(input)) {
+//                    return ABSENT;
+//                } else {
+//                    return manager.getDB().girlDao().loadGirl(mGirlId);
+//                }
+//            }
+//        });
+//
+//        manager.createDB(application);
     }
 
     public LiveData<Girl> getGirlLiveData() {

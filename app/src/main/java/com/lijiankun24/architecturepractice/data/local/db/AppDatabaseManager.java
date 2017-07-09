@@ -1,11 +1,14 @@
 package com.lijiankun24.architecturepractice.data.local.db;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
+
+import com.lijiankun24.architecturepractice.data.GirlsDataSource;
+import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
+
+import java.util.List;
 
 /**
  * AppDatabaseManager.java
@@ -18,8 +21,6 @@ public class AppDatabaseManager {
     private static final String DATABASE_NAME = "architecture-practice-db";
 
     private static AppDatabaseManager INSTANCE = null;
-
-    private final MutableLiveData<Boolean> mIsDatabaseCreated = new MutableLiveData<>();
 
     private AppDatabase mDB = null;
 
@@ -37,17 +38,7 @@ public class AppDatabaseManager {
         return INSTANCE;
     }
 
-    public LiveData<Boolean> isDatabaseCreated() {
-        return mIsDatabaseCreated;
-    }
-
-    @Nullable
-    public AppDatabase getDB() {
-        return mDB;
-    }
-
     public void createDB(Context context) {
-        mIsDatabaseCreated.setValue(false);
         new AsyncTask<Context, Void, Void>() {
             @Override
             protected Void doInBackground(Context... params) {
@@ -55,18 +46,52 @@ public class AppDatabaseManager {
                 context.deleteDatabase(DATABASE_NAME);
                 AppDatabase db = Room.databaseBuilder(context,
                         AppDatabase.class, DATABASE_NAME).build();
-
-                DatabseUtil.initializeDb(db);
-
                 mDB = db;
                 return null;
             }
+        }.execute(context.getApplicationContext());
+    }
+
+    public void insertGirls(final List<Girl> girls) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                mDB.beginTransaction();
+                try {
+                    mDB.girlDao().insertGirls(girls);
+                    mDB.setTransactionSuccessful();
+                } finally {
+                    mDB.endTransaction();
+                }
+                return null;
+            }
+        }.execute();
+    }
+
+    public void loadGirls(@NonNull final GirlsDataSource.LoadGirlsCallback callback) {
+        new AsyncTask<Void, Void, List<Girl>>() {
+            @Override
+            protected List<Girl> doInBackground(Void... voids) {
+                List<Girl> mAllGirls = null;
+                mDB.beginTransaction();
+                try {
+                    mAllGirls =  mDB.girlDao().loadAllGirls();
+                    mDB.setTransactionSuccessful();
+                } finally {
+                    mDB.endTransaction();
+                }
+                return mAllGirls;
+            }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
-                mIsDatabaseCreated.setValue(true);
+            protected void onPostExecute(List<Girl> aVoid) {
+                if(aVoid == null || aVoid.size() == 0){
+                    callback.onGirlsNotAvailable();
+                } else {
+                    callback.onGirlsLoaded(aVoid);
+                }
+                return;
             }
-        }.execute(context.getApplicationContext());
-
+        }.execute();
     }
 }

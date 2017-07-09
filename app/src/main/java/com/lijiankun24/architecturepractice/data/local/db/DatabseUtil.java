@@ -41,7 +41,7 @@ public class DatabseUtil {
         for (int i = 0; i < 10; i++) {
             String name = "Girl" + i;
             String avatar = mAvatars.get(i);
-            Girl girl = new Girl(UUID.randomUUID().toString(), name, avatar, DEFAULT_AGE, DEFAULT_FROM);
+            Girl girl = new Girl();
             girlList.add(girl);
         }
     }

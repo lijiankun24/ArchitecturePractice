@@ -20,14 +20,14 @@ import java.util.List;
 public interface GirlDao {
 
     @Query("SELECT * FROM girls")
-    LiveData<List<Girl>> loadAllGirls();
+    List<Girl> loadAllGirls();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertGirls(List<Girl> girls);
 
-    @Query("SELECT * FROM girls WHERE mId = :id")
+    @Query("SELECT * FROM girls WHERE _id = :id")
     LiveData<Girl> loadGirl(String id);
 
-    @Query("SELECT * FROM girls WHERE mId = :id")
+    @Query("SELECT * FROM girls WHERE _id = :id")
     Girl loadGirlSync(String id);
 }

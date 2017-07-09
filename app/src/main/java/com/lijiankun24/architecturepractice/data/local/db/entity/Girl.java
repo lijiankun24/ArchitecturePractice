@@ -1,7 +1,6 @@
 package com.lijiankun24.architecturepractice.data.local.db.entity;
 
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 /**
@@ -13,60 +12,110 @@ import android.arch.persistence.room.PrimaryKey;
 public class Girl {
 
     @PrimaryKey
-    private String mId;
+    private String _id;
 
-    private String mName;
+    private String createdAt;
 
-    private String mAvatar;
+    private String desc;
 
+    private String publishedAt;
+
+    private String source;
+
+    private String type;
+
+    private String url;
+
+    private boolean used;
+
+    private String who;
     private int mAge;
-
-    private String mFrom;
 
     public Girl() {
     }
 
     public Girl(Girl girl) {
-        this.mId = girl.getId();
-        this.mName = girl.getName();
-        this.mAge = girl.getAge();
-        this.mFrom = girl.getFrom();
-        this.mAvatar = girl.getAvatar();
+        this._id = girl.get_id();
+        this.createdAt = girl.getCreatedAt();
+        this.desc = girl.getDesc();
+        this.publishedAt = girl.getPublishedAt();
+        this.source = girl.getSource();
+        this.type = girl.getType();
+        this.url = girl.getUrl();
+        this.used = girl.isUsed();
+        this.who = girl.getWho();
     }
 
-    @Ignore
-    public Girl(String id, String name,
-                String avatar, int age,
-                String from) {
-        mId = id;
-        mName = name;
-        mAvatar = avatar;
-        mAge = age;
-        mFrom = from;
+    public String get_id() {
+        return _id;
     }
 
-    public String getId() {
-        return mId;
+    public void set_id(String id) {
+        this._id = id;
     }
 
-    public void setId(String id) {
-        mId = id;
+    public String getCreatedAt() {
+        return createdAt;
     }
 
-    public String getName() {
-        return mName;
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public void setName(String name) {
-        mName = name;
+    public String getDesc() {
+        return desc;
     }
 
-    public String getAvatar() {
-        return mAvatar;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
-    public void setAvatar(String avatar) {
-        mAvatar = avatar;
+    public String getPublishedAt() {
+        return publishedAt;
+    }
+
+    public void setPublishedAt(String publishedAt) {
+        this.publishedAt = publishedAt;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public boolean isUsed() {
+        return used;
+    }
+
+    public void setUsed(boolean used) {
+        this.used = used;
+    }
+
+    public String getWho() {
+        return who;
+    }
+
+    public void setWho(String who) {
+        this.who = who;
     }
 
     public int getAge() {
@@ -75,13 +124,5 @@ public class Girl {
 
     public void setAge(int age) {
         mAge = age;
-    }
-
-    public String getFrom() {
-        return mFrom;
-    }
-
-    public void setFrom(String from) {
-        mFrom = from;
     }
 }

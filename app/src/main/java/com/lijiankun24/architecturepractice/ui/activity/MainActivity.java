@@ -1,6 +1,6 @@
 package com.lijiankun24.architecturepractice.ui.activity;
 
-import android.support.v7.app.AppCompatActivity;
+import android.arch.lifecycle.LifecycleActivity;
 import android.os.Bundle;
 
 import com.lijiankun24.architecturepractice.R;
@@ -14,17 +14,21 @@ import com.lijiankun24.architecturepractice.ui.fragment.GirlListFragment;
  * <p>
  * Created by lijiankun on 17/7/4.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends LifecycleActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        showGirlList(savedInstanceState);
+    }
+
+    private void showGirlList(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             GirlListFragment girlListFragment = new GirlListFragment();
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.fl_main, girlListFragment, GirlListFragment.TAG)
+                    .add(R.id.fl_fragment_container, girlListFragment, GirlListFragment.TAG)
                     .commit();
         }
     }
@@ -36,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         GirlFragment girlFragment = GirlFragment.newInstance("");
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.fl_main, girlFragment, GirlFragment.TAG)
+                .add(R.id.fl_fragment_container, girlFragment, GirlFragment.TAG)
                 .commit();
     }
 }

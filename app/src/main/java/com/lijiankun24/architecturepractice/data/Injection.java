@@ -17,7 +17,7 @@ public class Injection {
 
     public static GirlsDataRepository getGirlsDataRepository(Context context) {
         checkNotNull(context);
-        return GirlsDataRepository.getInstance(GirlsRemoteDataSource.getInstance(context),
+        return GirlsDataRepository.getInstance(GirlsRemoteDataSource.getInstance(),
                 GirlsLocalDataSource.getInstance(context));
     }
 }

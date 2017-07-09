@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.lijiankun24.architecturepractice.data.GirlsDataSource;
+import com.lijiankun24.architecturepractice.data.local.db.AppDatabaseManager;
 import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
 
 /**
@@ -32,11 +33,15 @@ public class GirlsLocalDataSource implements GirlsDataSource {
 
     @Override
     public void getGirls(@NonNull LoadGirlsCallback callback) {
-
+        AppDatabaseManager.getInstance().loadGirls(callback);
     }
 
     @Override
     public Girl getGirl(@NonNull String id) {
         return null;
+    }
+
+    @Override
+    public void refreshTasks() {
     }
 }

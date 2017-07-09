@@ -2,6 +2,7 @@ package com.lijiankun24.architecturepractice.data;
 
 import android.support.annotation.NonNull;
 
+import com.lijiankun24.architecturepractice.data.local.db.AppDatabaseManager;
 import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
 
 import java.util.List;
@@ -20,13 +21,15 @@ public class GirlsDataRepository implements GirlsDataSource {
 
     private final GirlsDataSource mGirlsLocalDataSource;
 
-    public GirlsDataRepository(@NonNull GirlsDataSource girlsRemoteDataSource,
+    private boolean mIsLocalDataGirty = false;
+
+    private GirlsDataRepository(@NonNull GirlsDataSource girlsRemoteDataSource,
                                @NonNull GirlsDataSource girlsLocalDataSource) {
         mGirlsRemoteDataSource = girlsRemoteDataSource;
         mGirlsLocalDataSource = girlsLocalDataSource;
     }
 
-    public static GirlsDataRepository getInstance(@NonNull GirlsDataSource girlsRemoteDataSource,
+    static GirlsDataRepository getInstance(@NonNull GirlsDataSource girlsRemoteDataSource,
                                                   @NonNull GirlsDataSource girlsLocalDataSource) {
         if (INSTANCE == null) {
             synchronized (GirlsDataRepository.class) {
@@ -40,17 +43,21 @@ public class GirlsDataRepository implements GirlsDataSource {
 
     @Override
     public void getGirls(@NonNull final LoadGirlsCallback callback) {
-        mGirlsLocalDataSource.getGirls(new LoadGirlsCallback() {
-            @Override
-            public void onGirlsLoaded(List<Girl> girls) {
-                callback.onGirlsLoaded(girls);
-            }
+        if (mIsLocalDataGirty) {
+            getGirlsDataFromRemote(callback);
+        } else {
+            mGirlsLocalDataSource.getGirls(new LoadGirlsCallback() {
+                @Override
+                public void onGirlsLoaded(List<Girl> girls) {
+                    callback.onGirlsLoaded(girls);
+                }
 
-            @Override
-            public void onGirlsNotAvailable() {
-                mGirlsRemoteDataSource.getGirls(callback);
-            }
-        });
+                @Override
+                public void onGirlsNotAvailable() {
+                    getGirlsDataFromRemote(callback);
+                }
+            });
+        }
     }
 
     @Override
@@ -61,5 +68,29 @@ public class GirlsDataRepository implements GirlsDataSource {
         }
         girl = mGirlsRemoteDataSource.getGirl(id);
         return girl;
+    }
+
+    @Override
+    public void refreshTasks() {
+        mIsLocalDataGirty = true;
+    }
+
+    private void getGirlsDataFromRemote(@NonNull final LoadGirlsCallback callback) {
+        mGirlsRemoteDataSource.getGirls(new LoadGirlsCallback() {
+            @Override
+            public void onGirlsLoaded(List<Girl> girls) {
+                refreshGirlsLocalDataSource(girls);
+                callback.onGirlsLoaded(girls);
+            }
+
+            @Override
+            public void onGirlsNotAvailable() {
+                callback.onGirlsNotAvailable();
+            }
+        });
+    }
+
+    private void refreshGirlsLocalDataSource(List<Girl> girls) {
+        AppDatabaseManager.getInstance().insertGirls(girls);
     }
 }

@@ -44,10 +44,10 @@ public class GirlListAdapter extends RecyclerView.Adapter<GirlListAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Girl girl = mGirlList.get(position);
-        holder.getTVGirlName().setText(girl.getName());
+        holder.getTVGirlName().setText(girl.getWho());
         holder.getTVGirlAge().setText(String.valueOf(girl.getAge()));
         Glide.with(holder.getIVGirlAvatar().getContext())
-                .load(girl.getAvatar())
+                .load(girl.getUrl())
                 .error(R.drawable.ic_launcher)
                 .centerCrop()
                 .into(holder.getIVGirlAvatar());

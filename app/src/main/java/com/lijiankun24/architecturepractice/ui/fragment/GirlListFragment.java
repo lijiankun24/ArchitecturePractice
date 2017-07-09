@@ -14,10 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lijiankun24.architecturepractice.R;
+import com.lijiankun24.architecturepractice.data.Injection;
 import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
 import com.lijiankun24.architecturepractice.ui.activity.MainActivity;
 import com.lijiankun24.architecturepractice.ui.adapter.GirlListAdapter;
 import com.lijiankun24.architecturepractice.ui.listener.OnGirlClickListener;
+import com.lijiankun24.architecturepractice.utils.L;
 import com.lijiankun24.architecturepractice.viewmodel.GirlListViewModel;
 
 import java.util.List;
@@ -62,15 +64,21 @@ public class GirlListFragment extends LifecycleFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        GirlListViewModel girlListViewModel = ViewModelProviders.of(this)
+        if (!isAdded()) {
+            return;
+        }
+        GirlListViewModel.Factory factory = new GirlListViewModel
+                .Factory(getActivity().getApplication(), Injection.getGirlsDataRepository(getContext()));
+        final GirlListViewModel viewModel = ViewModelProviders.of(this, factory)
                 .get(GirlListViewModel.class);
-        subscribeUI(girlListViewModel);
+        subscribeUI(viewModel);
     }
 
     private void subscribeUI(GirlListViewModel viewModel) {
         viewModel.getLiveData().observe(this, new Observer<List<Girl>>() {
             @Override
             public void onChanged(@Nullable List<Girl> girls) {
+                L.i("girls size " + girls.size());
                 if (girls != null) {
                     mGirlListAdapter.setGirlList(girls);
                 } else {
