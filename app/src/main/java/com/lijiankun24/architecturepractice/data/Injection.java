@@ -15,9 +15,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Injection {
 
-    public static GirlsDataRepository getGirlsDataRepository(Context context) {
-        checkNotNull(context);
+    public static GirlsDataRepository getGirlsDataRepository() {
         return GirlsDataRepository.getInstance(GirlsRemoteDataSource.getInstance(),
-                GirlsLocalDataSource.getInstance(context));
+                GirlsLocalDataSource.getInstance());
     }
 }

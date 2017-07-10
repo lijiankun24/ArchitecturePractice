@@ -34,21 +34,6 @@ public class GirlViewModel extends AndroidViewModel {
     public GirlViewModel(Application application, String girlId) {
         super(application);
         this.mGirlId = girlId;
-
-//        final AppDatabaseManager manager = AppDatabaseManager.getInstance();
-//
-//        mGirlLiveData = Transformations.switchMap(manager.isDatabaseCreated(), new Function<Boolean, LiveData<Girl>>() {
-//            @Override
-//            public LiveData<Girl> apply(Boolean input) {
-//                if (!Boolean.TRUE.equals(input)) {
-//                    return ABSENT;
-//                } else {
-//                    return manager.getDB().girlDao().loadGirl(mGirlId);
-//                }
-//            }
-//        });
-//
-//        manager.createDB(application);
     }
 
     public LiveData<Girl> getGirlLiveData() {

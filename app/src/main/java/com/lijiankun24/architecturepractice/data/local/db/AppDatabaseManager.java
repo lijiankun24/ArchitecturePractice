@@ -1,11 +1,10 @@
 package com.lijiankun24.architecturepractice.data.local.db;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 
-import com.lijiankun24.architecturepractice.data.GirlsDataSource;
 import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
 
 import java.util.List;
@@ -43,10 +42,8 @@ public class AppDatabaseManager {
             @Override
             protected Void doInBackground(Context... params) {
                 Context context = params[0].getApplicationContext();
-                context.deleteDatabase(DATABASE_NAME);
-                AppDatabase db = Room.databaseBuilder(context,
+                mDB = Room.databaseBuilder(context,
                         AppDatabase.class, DATABASE_NAME).build();
-                mDB = db;
                 return null;
             }
         }.execute(context.getApplicationContext());
@@ -60,38 +57,18 @@ public class AppDatabaseManager {
                 try {
                     mDB.girlDao().insertGirls(girls);
                     mDB.setTransactionSuccessful();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 } finally {
                     mDB.endTransaction();
                 }
                 return null;
             }
         }.execute();
+
     }
 
-    public void loadGirls(@NonNull final GirlsDataSource.LoadGirlsCallback callback) {
-        new AsyncTask<Void, Void, List<Girl>>() {
-            @Override
-            protected List<Girl> doInBackground(Void... voids) {
-                List<Girl> mAllGirls = null;
-                mDB.beginTransaction();
-                try {
-                    mAllGirls =  mDB.girlDao().loadAllGirls();
-                    mDB.setTransactionSuccessful();
-                } finally {
-                    mDB.endTransaction();
-                }
-                return mAllGirls;
-            }
-
-            @Override
-            protected void onPostExecute(List<Girl> aVoid) {
-                if(aVoid == null || aVoid.size() == 0){
-                    callback.onGirlsNotAvailable();
-                } else {
-                    callback.onGirlsLoaded(aVoid);
-                }
-                return;
-            }
-        }.execute();
+    public LiveData<List<Girl>> loadGirls() {
+        return mDB.girlDao().loadAllGirls();
     }
 }

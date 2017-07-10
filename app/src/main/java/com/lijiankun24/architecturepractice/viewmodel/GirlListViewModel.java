@@ -3,13 +3,11 @@ package com.lijiankun24.architecturepractice.viewmodel;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
 import com.lijiankun24.architecturepractice.data.GirlsDataRepository;
-import com.lijiankun24.architecturepractice.data.GirlsDataSource;
 import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
 
 import java.util.List;
@@ -22,15 +20,7 @@ import java.util.List;
 
 public class GirlListViewModel extends AndroidViewModel {
 
-    private static final MutableLiveData ABSENT = new MutableLiveData();
-
     private GirlsDataRepository mGirlsDataRepository = null;
-
-    {
-        ABSENT.setValue(null);
-    }
-
-    private final MutableLiveData<List<Girl>> mLiveData = new MutableLiveData<>();
 
     public GirlListViewModel(Application application, GirlsDataRepository girlsDataRepository) {
         super(application);
@@ -38,18 +28,11 @@ public class GirlListViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Girl>> getLiveData() {
-        mGirlsDataRepository.getGirls(new GirlsDataSource.LoadGirlsCallback() {
-            @Override
-            public void onGirlsLoaded(List<Girl> girls) {
-                mLiveData.setValue(girls);
-            }
+        return mGirlsDataRepository.getGirls();
+    }
 
-            @Override
-            public void onGirlsNotAvailable() {
-
-            }
-        });
-        return mLiveData;
+    public void refreshGrilsData() {
+        mGirlsDataRepository.refreshTasks();
     }
 
     public static class Factory extends ViewModelProvider.NewInstanceFactory {

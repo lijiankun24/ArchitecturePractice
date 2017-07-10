@@ -1,9 +1,13 @@
 package com.lijiankun24.architecturepractice.data;
 
+import android.arch.core.util.Function;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Transformations;
 import android.support.annotation.NonNull;
 
 import com.lijiankun24.architecturepractice.data.local.db.AppDatabaseManager;
 import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
+import com.lijiankun24.architecturepractice.data.remote.GirlsRemoteDataSource;
 
 import java.util.List;
 
@@ -21,16 +25,16 @@ public class GirlsDataRepository implements GirlsDataSource {
 
     private final GirlsDataSource mGirlsLocalDataSource;
 
-    private boolean mIsLocalDataGirty = false;
+    private boolean mIsLocalDataDirty = true;
 
     private GirlsDataRepository(@NonNull GirlsDataSource girlsRemoteDataSource,
-                               @NonNull GirlsDataSource girlsLocalDataSource) {
+                                @NonNull GirlsDataSource girlsLocalDataSource) {
         mGirlsRemoteDataSource = girlsRemoteDataSource;
         mGirlsLocalDataSource = girlsLocalDataSource;
     }
 
     static GirlsDataRepository getInstance(@NonNull GirlsDataSource girlsRemoteDataSource,
-                                                  @NonNull GirlsDataSource girlsLocalDataSource) {
+                                           @NonNull GirlsDataSource girlsLocalDataSource) {
         if (INSTANCE == null) {
             synchronized (GirlsDataRepository.class) {
                 if (INSTANCE == null) {
@@ -42,55 +46,41 @@ public class GirlsDataRepository implements GirlsDataSource {
     }
 
     @Override
-    public void getGirls(@NonNull final LoadGirlsCallback callback) {
-        if (mIsLocalDataGirty) {
-            getGirlsDataFromRemote(callback);
+    public LiveData<List<Girl>> getGirls() {
+        if (mIsLocalDataDirty) {
+            return getGirlsDataFromRemote();
         } else {
-            mGirlsLocalDataSource.getGirls(new LoadGirlsCallback() {
-                @Override
-                public void onGirlsLoaded(List<Girl> girls) {
-                    callback.onGirlsLoaded(girls);
-                }
-
-                @Override
-                public void onGirlsNotAvailable() {
-                    getGirlsDataFromRemote(callback);
-                }
-            });
+            return mGirlsLocalDataSource.getGirls();
         }
     }
 
     @Override
-    public Girl getGirl(@NonNull String id) {
-        Girl girl = mGirlsLocalDataSource.getGirl(id);
-        if (girl != null) {
-            return girl;
-        }
-        girl = mGirlsRemoteDataSource.getGirl(id);
-        return girl;
+    public LiveData<Girl> getGirl(@NonNull String id) {
+        return null;
     }
 
     @Override
     public void refreshTasks() {
-        mIsLocalDataGirty = true;
+        mIsLocalDataDirty = true;
     }
 
-    private void getGirlsDataFromRemote(@NonNull final LoadGirlsCallback callback) {
-        mGirlsRemoteDataSource.getGirls(new LoadGirlsCallback() {
+    private LiveData<List<Girl>> getGirlsDataFromRemote() {
+        LiveData<Boolean> isGirlsGetSucceed = ((GirlsRemoteDataSource) mGirlsRemoteDataSource).isGirlsLoadSucceed();
+        return Transformations.switchMap(isGirlsGetSucceed, new Function<Boolean, LiveData<List<Girl>>>() {
             @Override
-            public void onGirlsLoaded(List<Girl> girls) {
-                refreshGirlsLocalDataSource(girls);
-                callback.onGirlsLoaded(girls);
-            }
-
-            @Override
-            public void onGirlsNotAvailable() {
-                callback.onGirlsNotAvailable();
+            public LiveData<List<Girl>> apply(Boolean input) {
+                if (Boolean.TRUE.equals(input)) {
+                    refreshGirlsLocalDataSource(mGirlsRemoteDataSource.getGirls().getValue());
+                    return mGirlsRemoteDataSource.getGirls();
+                } else {
+                    return mGirlsLocalDataSource.getGirls();
+                }
             }
         });
     }
 
     private void refreshGirlsLocalDataSource(List<Girl> girls) {
         AppDatabaseManager.getInstance().insertGirls(girls);
+        mIsLocalDataDirty = false;
     }
 }
