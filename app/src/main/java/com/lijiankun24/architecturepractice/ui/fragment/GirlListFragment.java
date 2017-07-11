@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,8 @@ public class GirlListFragment extends LifecycleFragment {
 
     private GirlListAdapter mGirlListAdapter = null;
 
+    private SwipeRefreshLayout mRefreshLayout = null;
+
     private final OnGirlClickListener mGirlClickListener = new OnGirlClickListener() {
         @Override
         public void onClick(Girl girl) {
@@ -52,10 +55,10 @@ public class GirlListFragment extends LifecycleFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_girl_list, container, false);
         initGirlList(((RecyclerView) view.findViewById(R.id.rv_girl_list)));
-        initSwipeRefreshLayout(((SwipeRefreshLayout) view.findViewById(R.id.srl)));
+        mRefreshLayout = view.findViewById(R.id.srl);
+        initSwipeRefreshLayout();
         return view;
     }
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -81,6 +84,13 @@ public class GirlListFragment extends LifecycleFragment {
                 mGirlListAdapter.setGirlList(girls);
             }
         });
+        mGirlListViewModel.isLoadingGirlListData().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean aBoolean) {
+                mRefreshLayout.setRefreshing(aBoolean);
+                Log.i("lijk", "isLoadingGirlListData aBoolean " + aBoolean);
+            }
+        });
     }
 
     private void initGirlList(RecyclerView recyclerView) {
@@ -93,13 +103,19 @@ public class GirlListFragment extends LifecycleFragment {
         recyclerView.setAdapter(mGirlListAdapter);
     }
 
-    private void initSwipeRefreshLayout(final SwipeRefreshLayout swipeRefresh) {
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+    private void initSwipeRefreshLayout() {
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mRefreshLayout.setRefreshing(true);
                 mGirlListViewModel.refreshGrilsData();
-                swipeRefresh.setRefreshing(false);
             }
         });
+        mRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
     }
+
+
 }

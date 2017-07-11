@@ -27,12 +27,6 @@ public class GirlListAdapter extends RecyclerView.Adapter<GirlListAdapter.ViewHo
     public void setGirlList(List<Girl> girlList) {
         mGirlList = girlList;
         notifyDataSetChanged();
-//        if (mGirlList == null) {
-//            mGirlList = girlList;
-//            notifyDataSetChanged();
-//        } else {
-//
-//        }
     }
 
     @Override
@@ -81,26 +75,26 @@ public class GirlListAdapter extends RecyclerView.Adapter<GirlListAdapter.ViewHo
 
             mRoot = view.findViewById(R.id.rl_girl_item_root);
 
-            mTVGirlName = (TextView) view.findViewById(R.id.tv_girl_name);
+            mTVGirlName = view.findViewById(R.id.tv_girl_name);
 
-            mTVGirlAge = (TextView) view.findViewById(R.id.tv_girl_age);
+            mTVGirlAge = view.findViewById(R.id.tv_girl_age);
 
-            mIVGirlAvatar = (ImageView) view.findViewById(R.id.iv_girl_avatar);
+            mIVGirlAvatar = view.findViewById(R.id.iv_girl_avatar);
         }
 
-        public View getRoot() {
+        private View getRoot() {
             return mRoot;
         }
 
-        public TextView getTVGirlName() {
+        private TextView getTVGirlName() {
             return mTVGirlName;
         }
 
-        public TextView getTVGirlAge() {
+        private TextView getTVGirlAge() {
             return mTVGirlAge;
         }
 
-        public ImageView getIVGirlAvatar() {
+        private ImageView getIVGirlAvatar() {
             return mIVGirlAvatar;
         }
     }

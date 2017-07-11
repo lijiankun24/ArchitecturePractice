@@ -23,8 +23,6 @@ public class GirlFragment extends LifecycleFragment {
 
     private static final String GIRL_ID = "girl_id";
 
-    private String mGirlId = null;
-
     public GirlFragment() {
     }
 

@@ -2,6 +2,7 @@ package com.lijiankun24.architecturepractice.data;
 
 import android.arch.core.util.Function;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.support.annotation.NonNull;
 
@@ -25,12 +26,16 @@ public class GirlsDataRepository implements GirlsDataSource {
 
     private final GirlsDataSource mGirlsLocalDataSource;
 
-    private boolean mIsLocalDataDirty = true;
+    private MutableLiveData<Boolean> mIsLoadingGirlListData;
+
+    private MutableLiveData<Boolean> mIsLocalDataDirty;
 
     private GirlsDataRepository(@NonNull GirlsDataSource girlsRemoteDataSource,
                                 @NonNull GirlsDataSource girlsLocalDataSource) {
         mGirlsRemoteDataSource = girlsRemoteDataSource;
         mGirlsLocalDataSource = girlsLocalDataSource;
+        mIsLoadingGirlListData = new MutableLiveData<>();
+        mIsLocalDataDirty = new MutableLiveData<>();
     }
 
     static GirlsDataRepository getInstance(@NonNull GirlsDataSource girlsRemoteDataSource,
@@ -47,11 +52,7 @@ public class GirlsDataRepository implements GirlsDataSource {
 
     @Override
     public LiveData<List<Girl>> getGirls() {
-        if (mIsLocalDataDirty) {
-            return getGirlsDataFromRemote();
-        } else {
-            return mGirlsLocalDataSource.getGirls();
-        }
+        return mGirlsLocalDataSource.getGirls();
     }
 
     @Override
@@ -61,14 +62,29 @@ public class GirlsDataRepository implements GirlsDataSource {
 
     @Override
     public void refreshTasks() {
-        mIsLocalDataDirty = true;
+        LiveData<List<Girl>> list = Transformations.switchMap(mIsLocalDataDirty, new Function<Boolean, LiveData<List<Girl>>>() {
+            @Override
+            public LiveData<List<Girl>> apply(Boolean input) {
+                if (Boolean.TRUE.equals(input)) {
+                    getGirlsDataFromRemote();
+                }
+                return null;
+            }
+        });
+        mIsLocalDataDirty.setValue(true);
+    }
+
+    public MutableLiveData<Boolean> isLoadingGirlListData() {
+        return mIsLoadingGirlListData;
     }
 
     private LiveData<List<Girl>> getGirlsDataFromRemote() {
         LiveData<Boolean> isGirlsGetSucceed = ((GirlsRemoteDataSource) mGirlsRemoteDataSource).isGirlsLoadSucceed();
+        mIsLoadingGirlListData.setValue(true);
         return Transformations.switchMap(isGirlsGetSucceed, new Function<Boolean, LiveData<List<Girl>>>() {
             @Override
             public LiveData<List<Girl>> apply(Boolean input) {
+                mIsLoadingGirlListData.setValue(false);
                 if (Boolean.TRUE.equals(input)) {
                     refreshGirlsLocalDataSource(mGirlsRemoteDataSource.getGirls().getValue());
                     return mGirlsRemoteDataSource.getGirls();
@@ -81,6 +97,6 @@ public class GirlsDataRepository implements GirlsDataSource {
 
     private void refreshGirlsLocalDataSource(List<Girl> girls) {
         AppDatabaseManager.getInstance().insertGirls(girls);
-        mIsLocalDataDirty = false;
+        mIsLocalDataDirty.setValue(false);
     }
 }

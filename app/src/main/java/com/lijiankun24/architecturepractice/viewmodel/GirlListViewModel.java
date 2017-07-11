@@ -22,13 +22,17 @@ public class GirlListViewModel extends AndroidViewModel {
 
     private GirlsDataRepository mGirlsDataRepository = null;
 
-    public GirlListViewModel(Application application, GirlsDataRepository girlsDataRepository) {
+    private GirlListViewModel(Application application, GirlsDataRepository girlsDataRepository) {
         super(application);
         mGirlsDataRepository = girlsDataRepository;
     }
 
     public LiveData<List<Girl>> getLiveData() {
         return mGirlsDataRepository.getGirls();
+    }
+
+    public LiveData<Boolean> isLoadingGirlListData() {
+        return mGirlsDataRepository.isLoadingGirlListData();
     }
 
     public void refreshGrilsData() {
