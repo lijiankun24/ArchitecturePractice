@@ -80,8 +80,8 @@ public class GirlsRemoteDataSource implements GirlsDataSource {
 
                     @Override
                     public void onFailure(Call<GirlData> call, Throwable t) {
-                        mIsGirlGetSucceed.setValue(false);
                         mGirls.setValue(new ArrayList<Girl>());
+                        mIsGirlGetSucceed.setValue(false);
                     }
                 });
         return mIsGirlGetSucceed;

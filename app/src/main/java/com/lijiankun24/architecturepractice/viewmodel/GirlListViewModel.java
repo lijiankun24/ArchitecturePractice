@@ -3,6 +3,8 @@ package com.lijiankun24.architecturepractice.viewmodel;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
@@ -22,9 +24,17 @@ public class GirlListViewModel extends AndroidViewModel {
 
     private GirlsDataRepository mGirlsDataRepository = null;
 
+    private LiveData<Boolean> mBooleanLiveData = null;
+
     private GirlListViewModel(Application application, GirlsDataRepository girlsDataRepository) {
         super(application);
         mGirlsDataRepository = girlsDataRepository;
+        mBooleanLiveData = new MediatorLiveData<Boolean>(){
+            @Override
+            public <S> void addSource(LiveData<S> source, Observer<S> onChanged) {
+                super.addSource(source, onChanged);
+            }
+        };
     }
 
     public LiveData<List<Girl>> getLiveData() {

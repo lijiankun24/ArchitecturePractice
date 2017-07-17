@@ -17,13 +17,6 @@
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:title="@string/app_name"/>
 
-    <TextView
-        android:id="@+id/tv_new_activity"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@android:color/holo_blue_light"
-        android:text="@string/app_name"/>
-
     <FrameLayout
         android:id="@+id/fl_fragment_container"
         android:layout_width="match_parent"

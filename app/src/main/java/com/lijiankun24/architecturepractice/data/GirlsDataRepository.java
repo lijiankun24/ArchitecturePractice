@@ -26,16 +26,28 @@ public class GirlsDataRepository implements GirlsDataSource {
 
     private final GirlsDataSource mGirlsLocalDataSource;
 
-    private MutableLiveData<Boolean> mIsLoadingGirlListData;
+    private final MutableLiveData<Boolean> mIsLoadingGirlListData;
 
-    private MutableLiveData<Boolean> mIsLocalDataDirty;
+    private final MutableLiveData<Boolean> mIsLocalDataDirty;
+
+    private final LiveData<List<Girl>> mAllGirls;
 
     private GirlsDataRepository(@NonNull GirlsDataSource girlsRemoteDataSource,
                                 @NonNull GirlsDataSource girlsLocalDataSource) {
         mGirlsRemoteDataSource = girlsRemoteDataSource;
         mGirlsLocalDataSource = girlsLocalDataSource;
-        mIsLoadingGirlListData = new MutableLiveData<>();
         mIsLocalDataDirty = new MutableLiveData<>();
+        mIsLoadingGirlListData = new MutableLiveData<>();
+        mAllGirls = Transformations.switchMap(mIsLocalDataDirty, new Function<Boolean, LiveData<List<Girl>>>() {
+            @Override
+            public LiveData<List<Girl>> apply(Boolean input) {
+                if (input) {
+                    return getGirlsDataFromRemote();
+                } else {
+                    return mGirlsLocalDataSource.getGirls();
+                }
+            }
+        });
     }
 
     static GirlsDataRepository getInstance(@NonNull GirlsDataSource girlsRemoteDataSource,
@@ -52,7 +64,7 @@ public class GirlsDataRepository implements GirlsDataSource {
 
     @Override
     public LiveData<List<Girl>> getGirls() {
-        return mGirlsLocalDataSource.getGirls();
+        return mAllGirls;
     }
 
     @Override
@@ -62,15 +74,6 @@ public class GirlsDataRepository implements GirlsDataSource {
 
     @Override
     public void refreshTasks() {
-        LiveData<List<Girl>> list = Transformations.switchMap(mIsLocalDataDirty, new Function<Boolean, LiveData<List<Girl>>>() {
-            @Override
-            public LiveData<List<Girl>> apply(Boolean input) {
-                if (Boolean.TRUE.equals(input)) {
-                    getGirlsDataFromRemote();
-                }
-                return null;
-            }
-        });
         mIsLocalDataDirty.setValue(true);
     }
 
@@ -97,6 +100,5 @@ public class GirlsDataRepository implements GirlsDataSource {
 
     private void refreshGirlsLocalDataSource(List<Girl> girls) {
         AppDatabaseManager.getInstance().insertGirls(girls);
-        mIsLocalDataDirty.setValue(false);
     }
 }
