@@ -1,9 +1,6 @@
 package com.lijiankun24.architecturepractice.data;
 
-import android.arch.core.util.Function;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Transformations;
 import android.support.annotation.NonNull;
 
 import com.lijiankun24.architecturepractice.data.local.db.AppDatabaseManager;
@@ -26,28 +23,13 @@ public class GirlsDataRepository implements GirlsDataSource {
 
     private final GirlsDataSource mGirlsLocalDataSource;
 
-    private final MutableLiveData<Boolean> mIsLoadingGirlListData;
-
-    private final MutableLiveData<Boolean> mIsLocalDataDirty;
-
-    private final LiveData<List<Girl>> mAllGirls;
+    private final LiveData<Boolean> mIsLoadingGirlListData;
 
     private GirlsDataRepository(@NonNull GirlsDataSource girlsRemoteDataSource,
                                 @NonNull GirlsDataSource girlsLocalDataSource) {
         mGirlsRemoteDataSource = girlsRemoteDataSource;
         mGirlsLocalDataSource = girlsLocalDataSource;
-        mIsLocalDataDirty = new MutableLiveData<>();
-        mIsLoadingGirlListData = new MutableLiveData<>();
-        mAllGirls = Transformations.switchMap(mIsLocalDataDirty, new Function<Boolean, LiveData<List<Girl>>>() {
-            @Override
-            public LiveData<List<Girl>> apply(Boolean input) {
-                if (input) {
-                    return getGirlsDataFromRemote();
-                } else {
-                    return mGirlsLocalDataSource.getGirls();
-                }
-            }
-        });
+        mIsLoadingGirlListData = ((GirlsRemoteDataSource) mGirlsRemoteDataSource).isGirlsLoadSucceed();
     }
 
     static GirlsDataRepository getInstance(@NonNull GirlsDataSource girlsRemoteDataSource,
@@ -63,8 +45,8 @@ public class GirlsDataRepository implements GirlsDataSource {
     }
 
     @Override
-    public LiveData<List<Girl>> getGirls() {
-        return mAllGirls;
+    public LiveData<List<Girl>> getGirls(int index) {
+        return null;
     }
 
     @Override
@@ -72,30 +54,16 @@ public class GirlsDataRepository implements GirlsDataSource {
         return null;
     }
 
-    @Override
-    public void refreshTasks() {
-        mIsLocalDataDirty.setValue(true);
+    public LiveData<List<Girl>> getGirlsFromLocal(int index) {
+        return mGirlsLocalDataSource.getGirls(index);
     }
 
-    public MutableLiveData<Boolean> isLoadingGirlListData() {
+    public LiveData<List<Girl>> getGirlsFromRemote(int index) {
+        return mGirlsRemoteDataSource.getGirls(index);
+    }
+
+    public LiveData<Boolean> isLoadingGirlListData() {
         return mIsLoadingGirlListData;
-    }
-
-    private LiveData<List<Girl>> getGirlsDataFromRemote() {
-        LiveData<Boolean> isGirlsGetSucceed = ((GirlsRemoteDataSource) mGirlsRemoteDataSource).isGirlsLoadSucceed();
-        mIsLoadingGirlListData.setValue(true);
-        return Transformations.switchMap(isGirlsGetSucceed, new Function<Boolean, LiveData<List<Girl>>>() {
-            @Override
-            public LiveData<List<Girl>> apply(Boolean input) {
-                mIsLoadingGirlListData.setValue(false);
-                if (Boolean.TRUE.equals(input)) {
-                    refreshGirlsLocalDataSource(mGirlsRemoteDataSource.getGirls().getValue());
-                    return mGirlsRemoteDataSource.getGirls();
-                } else {
-                    return mGirlsLocalDataSource.getGirls();
-                }
-            }
-        });
     }
 
     private void refreshGirlsLocalDataSource(List<Girl> girls) {

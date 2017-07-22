@@ -15,9 +15,7 @@ import java.util.List;
 
 public interface GirlsDataSource {
 
-    LiveData<List<Girl>> getGirls();
+    LiveData<List<Girl>> getGirls(int index);
 
     LiveData<Girl> getGirl(@NonNull String id);
-
-    void refreshTasks();
 }

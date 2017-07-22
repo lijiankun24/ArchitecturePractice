@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,9 +53,7 @@ public class GirlListFragment extends LifecycleFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_girl_list, container, false);
-        initGirlList(((RecyclerView) view.findViewById(R.id.rv_girl_list)));
-        mRefreshLayout = view.findViewById(R.id.srl);
-        initSwipeRefreshLayout();
+        initView(view);
         return view;
     }
 
@@ -67,14 +64,10 @@ public class GirlListFragment extends LifecycleFragment {
     }
 
     private void subscribeUI() {
-        if (!isAdded()) {
-            return;
-        }
         GirlListViewModel.Factory factory = new GirlListViewModel
                 .Factory(getActivity().getApplication(), Injection.getGirlsDataRepository());
-        mGirlListViewModel = ViewModelProviders.of(this, factory)
-                .get(GirlListViewModel.class);
-        mGirlListViewModel.getLiveData().observe(this, new Observer<List<Girl>>() {
+        mGirlListViewModel = ViewModelProviders.of(this, factory).get(GirlListViewModel.class);
+        mGirlListViewModel.getGilrsLiveData().observe(this, new Observer<List<Girl>>() {
             @Override
             public void onChanged(@Nullable List<Girl> girls) {
                 if (girls == null || girls.size() == 0) {
@@ -84,26 +77,40 @@ public class GirlListFragment extends LifecycleFragment {
                 mGirlListAdapter.setGirlList(girls);
             }
         });
-        mGirlListViewModel.isLoadingGirlListData().observe(this, new Observer<Boolean>() {
+        mGirlListViewModel.getLoadMoreState().observe(this, new Observer<GirlListViewModel.LoadMoreState>() {
             @Override
-            public void onChanged(@Nullable Boolean aBoolean) {
-                mRefreshLayout.setRefreshing(aBoolean);
-                Log.i("lijk", "isLoadingGirlListData aBoolean " + aBoolean);
+            public void onChanged(@Nullable GirlListViewModel.LoadMoreState state) {
+                L.i("state " + state.isRunning());
+                mRefreshLayout.setRefreshing(state.isRunning());
             }
         });
+        mGirlListViewModel.refreshGrilsData();
     }
 
-    private void initGirlList(RecyclerView recyclerView) {
-        if (recyclerView == null) {
-            return;
-        }
-        Context context = recyclerView.getContext();
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+    private void initView(View view) {
+        Context context = view.getContext();
+
+        RecyclerView recyclerView = view.findViewById(R.id.rv_girl_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context,
+                LinearLayoutManager.VERTICAL, false));
         mGirlListAdapter = new GirlListAdapter(mGirlClickListener);
         recyclerView.setAdapter(mGirlListAdapter);
-    }
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                LinearLayoutManager layoutManager = (LinearLayoutManager)
+                        recyclerView.getLayoutManager();
+                int lastPosition = layoutManager
+                        .findLastVisibleItemPosition();
+                if (lastPosition == mGirlListAdapter.getItemCount() - 1) {
+                    // 上拉加载更多数据
+                    mGirlListViewModel.loadNextPageGirls();
+                }
+            }
+        });
 
-    private void initSwipeRefreshLayout() {
+
+        mRefreshLayout = view.findViewById(R.id.srl);
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -116,6 +123,4 @@ public class GirlListFragment extends LifecycleFragment {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
     }
-
-
 }

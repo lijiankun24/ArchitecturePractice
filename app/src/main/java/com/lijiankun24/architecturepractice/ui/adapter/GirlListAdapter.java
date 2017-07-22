@@ -12,6 +12,7 @@ import com.lijiankun24.architecturepractice.R;
 import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
 import com.lijiankun24.architecturepractice.ui.listener.OnGirlClickListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GirlListAdapter extends RecyclerView.Adapter<GirlListAdapter.ViewHolder> {
@@ -22,10 +23,11 @@ public class GirlListAdapter extends RecyclerView.Adapter<GirlListAdapter.ViewHo
 
     public GirlListAdapter(OnGirlClickListener listener) {
         mGirlClickListener = listener;
+        mGirlList = new ArrayList<>();
     }
 
     public void setGirlList(List<Girl> girlList) {
-        mGirlList = girlList;
+        mGirlList.addAll(girlList);
         notifyDataSetChanged();
     }
 

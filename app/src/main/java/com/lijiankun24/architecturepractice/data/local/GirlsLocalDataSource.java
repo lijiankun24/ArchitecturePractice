@@ -34,7 +34,7 @@ public class GirlsLocalDataSource implements GirlsDataSource {
     }
 
     @Override
-    public LiveData<List<Girl>> getGirls() {
+    public LiveData<List<Girl>> getGirls(int index) {
         return AppDatabaseManager.getInstance().loadGirls();
     }
 
@@ -43,7 +43,6 @@ public class GirlsLocalDataSource implements GirlsDataSource {
         return null;
     }
 
-    @Override
     public void refreshTasks() {
     }
 }

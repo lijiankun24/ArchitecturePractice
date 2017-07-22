@@ -27,15 +27,17 @@ public class GirlsRemoteDataSource implements GirlsDataSource {
 
     private static GirlsRemoteDataSource INSTANCE = null;
 
-    private final MutableLiveData<Boolean> mIsGirlGetSucceed = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mIsGirlGetSucceed;
 
-    private MutableLiveData<List<Girl>> mGirls;
+    private final MutableLiveData<List<Girl>> mGirls;
 
     private final ApiGirl mApiGirl;
 
     {
+        mIsGirlGetSucceed = new MutableLiveData<>();
         mIsGirlGetSucceed.setValue(false);
         mGirls = new MutableLiveData<>();
+        mGirls.postValue(null);
     }
 
     private GirlsRemoteDataSource() {
@@ -54,27 +56,14 @@ public class GirlsRemoteDataSource implements GirlsDataSource {
     }
 
     @Override
-    public LiveData<List<Girl>> getGirls() {
-        return mGirls;
-    }
-
-    @Override
-    public LiveData<Girl> getGirl(@NonNull String id) {
-        return null;
-    }
-
-    @Override
-    public void refreshTasks() {
-    }
-
-    public LiveData<Boolean> isGirlsLoadSucceed() {
-        mApiGirl.getGirlsData(1)
+    public LiveData<List<Girl>> getGirls(int index) {
+        mApiGirl.getGirlsData(index)
                 .enqueue(new Callback<GirlData>() {
                     @Override
                     public void onResponse(Call<GirlData> call, Response<GirlData> response) {
+                        mIsGirlGetSucceed.setValue(false);
                         if (response.isSuccessful() || !response.body().error) {
                             mGirls.setValue(response.body().results);
-                            mIsGirlGetSucceed.setValue(true);
                         }
                     }
 
@@ -84,6 +73,15 @@ public class GirlsRemoteDataSource implements GirlsDataSource {
                         mIsGirlGetSucceed.setValue(false);
                     }
                 });
+        return mGirls;
+    }
+
+    @Override
+    public LiveData<Girl> getGirl(@NonNull String id) {
+        return null;
+    }
+
+    public LiveData<Boolean> isGirlsLoadSucceed() {
         return mIsGirlGetSucceed;
     }
 }
