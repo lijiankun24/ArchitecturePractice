@@ -13,7 +13,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
+import com.lijiankun24.architecturepractice.MyApplication;
 import com.lijiankun24.architecturepractice.R;
 import com.lijiankun24.architecturepractice.data.Injection;
 import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
@@ -40,6 +42,8 @@ public class GirlListFragment extends LifecycleFragment {
 
     private SwipeRefreshLayout mRefreshLayout = null;
 
+    private ProgressBar mLoadMorebar = null;
+
     private final OnGirlClickListener mGirlClickListener = new OnGirlClickListener() {
         @Override
         public void onClick(Girl girl) {
@@ -64,8 +68,12 @@ public class GirlListFragment extends LifecycleFragment {
     }
 
     private void subscribeUI() {
+        if (!isAdded()) {
+            return;
+        }
         GirlListViewModel.Factory factory = new GirlListViewModel
-                .Factory(getActivity().getApplication(), Injection.getGirlsDataRepository());
+                .Factory(MyApplication.getInstance(),
+                Injection.getGirlsDataRepository(MyApplication.getInstance()));
         mGirlListViewModel = ViewModelProviders.of(this, factory).get(GirlListViewModel.class);
         mGirlListViewModel.getGilrsLiveData().observe(this, new Observer<List<Girl>>() {
             @Override
@@ -77,18 +85,24 @@ public class GirlListFragment extends LifecycleFragment {
                 mGirlListAdapter.setGirlList(girls);
             }
         });
-        mGirlListViewModel.getLoadMoreState().observe(this, new Observer<GirlListViewModel.LoadMoreState>() {
+        mGirlListViewModel.getLoadMoreState().observe(this, new Observer<Boolean>() {
             @Override
-            public void onChanged(@Nullable GirlListViewModel.LoadMoreState state) {
-                L.i("state " + state.isRunning());
-                mRefreshLayout.setRefreshing(state.isRunning());
+            public void onChanged(@Nullable Boolean state) {
+                L.i("state " + state);
+                if (mRefreshLayout.isRefreshing()) {
+                    mRefreshLayout.setRefreshing(false);
+                } else {
+                    mLoadMorebar.setVisibility(state ? View.VISIBLE : View.INVISIBLE);
+                }
             }
         });
         mGirlListViewModel.refreshGrilsData();
+        mRefreshLayout.setRefreshing(true);
     }
 
     private void initView(View view) {
         Context context = view.getContext();
+
 
         RecyclerView recyclerView = view.findViewById(R.id.rv_girl_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context,
@@ -114,6 +128,7 @@ public class GirlListFragment extends LifecycleFragment {
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mGirlListAdapter.clearGirlList();
                 mRefreshLayout.setRefreshing(true);
                 mGirlListViewModel.refreshGrilsData();
             }
@@ -122,5 +137,7 @@ public class GirlListFragment extends LifecycleFragment {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+
+        mLoadMorebar = view.findViewById(R.id.load_more_bar);
     }
 }

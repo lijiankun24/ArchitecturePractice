@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import com.lijiankun24.architecturepractice.data.GirlsDataSource;
 import com.lijiankun24.architecturepractice.data.local.db.AppDatabaseManager;
 import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
+import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStory;
 
 import java.util.List;
 
@@ -34,8 +35,8 @@ public class GirlsLocalDataSource implements GirlsDataSource {
     }
 
     @Override
-    public LiveData<List<Girl>> getGirls(int index) {
-        return AppDatabaseManager.getInstance().loadGirls();
+    public LiveData<List<Girl>> getGirlList(int index) {
+        return AppDatabaseManager.getInstance().loadGirlList();
     }
 
     @Override
@@ -43,6 +44,24 @@ public class GirlsLocalDataSource implements GirlsDataSource {
         return null;
     }
 
-    public void refreshTasks() {
+    @Override
+    public LiveData<Boolean> isLoadingGirlList() {
+        return null;
+    }
+
+
+    @Override
+    public LiveData<List<ZhihuStory>> getLastZhihuList() {
+        return null;
+    }
+
+    @Override
+    public LiveData<List<ZhihuStory>> getMoreZhihuList(String date) {
+        return null;
+    }
+
+    @Override
+    public LiveData<Boolean> isLoadingZhihuList() {
+        return null;
     }
 }

@@ -20,7 +20,7 @@ import java.util.List;
 public interface GirlDao {
 
     @Query("SELECT * FROM girls")
-    LiveData<List<Girl>> loadAllGirls();
+    List<Girl> loadAllGirls();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertGirls(List<Girl> girls);

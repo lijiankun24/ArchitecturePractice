@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">ArchitecturePractice</string>
+
+    <!-- GirlFragment begin -->
+    <string name="girl_title">Beautiful Girl</string>
+    <string name="girl_photo_describe">PhotoViewForTest</string>
+    <!-- GirlFragment end -->
 </resources>

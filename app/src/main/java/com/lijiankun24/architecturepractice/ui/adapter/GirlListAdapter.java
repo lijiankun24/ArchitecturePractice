@@ -26,11 +26,6 @@ public class GirlListAdapter extends RecyclerView.Adapter<GirlListAdapter.ViewHo
         mGirlList = new ArrayList<>();
     }
 
-    public void setGirlList(List<Girl> girlList) {
-        mGirlList.addAll(girlList);
-        notifyDataSetChanged();
-    }
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext())
@@ -41,7 +36,7 @@ public class GirlListAdapter extends RecyclerView.Adapter<GirlListAdapter.ViewHo
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Girl girl = mGirlList.get(position);
         holder.getTVGirlName().setText(girl.getWho());
-        holder.getTVGirlAge().setText(String.valueOf(girl.getAge()));
+        holder.getTVGirlAge().setText(girl.getPublishedAt());
         Glide.with(holder.getIVGirlAvatar().getContext())
                 .load(girl.getUrl())
                 .error(R.drawable.ic_launcher)
@@ -60,6 +55,16 @@ public class GirlListAdapter extends RecyclerView.Adapter<GirlListAdapter.ViewHo
     @Override
     public int getItemCount() {
         return mGirlList == null ? 0 : mGirlList.size();
+    }
+
+    public void setGirlList(List<Girl> girlList) {
+        mGirlList.addAll(girlList);
+        notifyDataSetChanged();
+    }
+
+    public void clearGirlList() {
+        mGirlList.clear();
+        notifyDataSetChanged();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

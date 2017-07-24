@@ -14,12 +14,19 @@ import com.lijiankun24.architecturepractice.utils.Consts;
 
 public class MyApplication extends Application {
 
+    private static MyApplication INSTANCE = null;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        INSTANCE = this;
         AppDatabaseManager.getInstance().createDB(this);
         if (Consts.DEBUG) {
             Stetho.initializeWithDefaults(this);
         }
+    }
+
+    public static MyApplication getInstance() {
+        return INSTANCE;
     }
 }

@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
 import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
+import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStory;
 
 import java.util.List;
 
@@ -15,7 +16,22 @@ import java.util.List;
 
 public interface GirlsDataSource {
 
-    LiveData<List<Girl>> getGirls(int index);
+    /**
+     * Girl 相关方法
+     */
+    LiveData<List<Girl>> getGirlList(int index);
 
     LiveData<Girl> getGirl(@NonNull String id);
+
+    LiveData<Boolean> isLoadingGirlList();
+
+
+    /**
+     * Zhihu 相关方法
+     */
+    LiveData<List<ZhihuStory>> getLastZhihuList();
+
+    LiveData<List<ZhihuStory>> getMoreZhihuList(String date);
+
+    LiveData<Boolean> isLoadingZhihuList();
 }

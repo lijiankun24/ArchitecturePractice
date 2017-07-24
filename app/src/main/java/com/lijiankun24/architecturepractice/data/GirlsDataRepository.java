@@ -1,11 +1,12 @@
 package com.lijiankun24.architecturepractice.data;
 
+import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
-import com.lijiankun24.architecturepractice.data.local.db.AppDatabaseManager;
 import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
-import com.lijiankun24.architecturepractice.data.remote.GirlsRemoteDataSource;
+import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStory;
+import com.lijiankun24.architecturepractice.utils.Util;
 
 import java.util.List;
 
@@ -15,58 +16,58 @@ import java.util.List;
  * Created by lijiankun on 17/7/7.
  */
 
-public class GirlsDataRepository implements GirlsDataSource {
+public class GirlsDataRepository {
 
     private static GirlsDataRepository INSTANCE = null;
 
-    private final GirlsDataSource mGirlsRemoteDataSource;
+    private final GirlsDataSource mGirlRemoteDataSource;
 
-    private final GirlsDataSource mGirlsLocalDataSource;
+    private final GirlsDataSource mGirlLocalDataSource;
 
-    private final LiveData<Boolean> mIsLoadingGirlListData;
+    private static Application sApplication = null;
 
     private GirlsDataRepository(@NonNull GirlsDataSource girlsRemoteDataSource,
                                 @NonNull GirlsDataSource girlsLocalDataSource) {
-        mGirlsRemoteDataSource = girlsRemoteDataSource;
-        mGirlsLocalDataSource = girlsLocalDataSource;
-        mIsLoadingGirlListData = ((GirlsRemoteDataSource) mGirlsRemoteDataSource).isGirlsLoadSucceed();
+        mGirlRemoteDataSource = girlsRemoteDataSource;
+        mGirlLocalDataSource = girlsLocalDataSource;
     }
 
     static GirlsDataRepository getInstance(@NonNull GirlsDataSource girlsRemoteDataSource,
-                                           @NonNull GirlsDataSource girlsLocalDataSource) {
+                                           @NonNull GirlsDataSource girlsLocalDataSource,
+                                           Application application) {
         if (INSTANCE == null) {
             synchronized (GirlsDataRepository.class) {
                 if (INSTANCE == null) {
                     INSTANCE = new GirlsDataRepository(girlsRemoteDataSource, girlsLocalDataSource);
+                    sApplication = application;
                 }
             }
         }
         return INSTANCE;
     }
 
-    @Override
-    public LiveData<List<Girl>> getGirls(int index) {
-        return null;
+    public LiveData<List<Girl>> getGirlList(int index) {
+        if (Util.isNetworkConnected(sApplication.getApplicationContext())) {
+            return mGirlRemoteDataSource.getGirlList(index);
+        } else {
+            return mGirlLocalDataSource.getGirlList(index);
+        }
     }
 
-    @Override
-    public LiveData<Girl> getGirl(@NonNull String id) {
-        return null;
+    public LiveData<Boolean> isLoadingGirlList() {
+        return mGirlRemoteDataSource.isLoadingGirlList();
     }
 
-    public LiveData<List<Girl>> getGirlsFromLocal(int index) {
-        return mGirlsLocalDataSource.getGirls(index);
+
+    public LiveData<List<ZhihuStory>> getZhihuList(@NonNull String date) {
+        if (date.equals("today")) {
+            return mGirlRemoteDataSource.getLastZhihuList();
+        } else {
+            return mGirlRemoteDataSource.getMoreZhihuList(date);
+        }
     }
 
-    public LiveData<List<Girl>> getGirlsFromRemote(int index) {
-        return mGirlsRemoteDataSource.getGirls(index);
-    }
-
-    public LiveData<Boolean> isLoadingGirlListData() {
-        return mIsLoadingGirlListData;
-    }
-
-    private void refreshGirlsLocalDataSource(List<Girl> girls) {
-        AppDatabaseManager.getInstance().insertGirls(girls);
+    public LiveData<Boolean> isLoadingZhihuList() {
+        return mGirlRemoteDataSource.isLoadingZhihuList();
     }
 }

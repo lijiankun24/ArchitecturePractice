@@ -13,9 +13,13 @@ public class ApiManager {
 
     private static final String GIRL_URL = "http://gank.io/";
 
+    private static final String ZHIHU_URL = "https://news-at.zhihu.com/";
+
     private static ApiManager INSTANCE;
 
     private static ApiGirl sApiGirl;
+
+    private static ApiZhihu sApiZhihu;
 
     private ApiManager() {
     }
@@ -44,5 +48,20 @@ public class ApiManager {
             }
         }
         return sApiGirl;
+    }
+
+    public ApiZhihu getApiZhihu() {
+        if (sApiZhihu == null) {
+            synchronized (ApiManager.class) {
+                if (sApiZhihu == null) {
+                    sApiZhihu = new Retrofit.Builder()
+                            .baseUrl(ZHIHU_URL)
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build()
+                            .create(ApiZhihu.class);
+                }
+            }
+        }
+        return sApiZhihu;
     }
 }

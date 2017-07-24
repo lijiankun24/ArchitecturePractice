@@ -37,10 +37,11 @@ public class MainActivity extends LifecycleActivity {
         if (girl == null) {
             return;
         }
-        GirlFragment girlFragment = GirlFragment.newInstance("");
+        GirlFragment girlFragment = GirlFragment.newInstance(girl.getUrl());
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.fl_fragment_container, girlFragment, GirlFragment.TAG)
+                .addToBackStack(null)
                 .commit();
     }
 }

@@ -29,6 +29,7 @@ public class Girl {
     private boolean used;
 
     private String who;
+
     private int mAge;
 
     public Girl() {
