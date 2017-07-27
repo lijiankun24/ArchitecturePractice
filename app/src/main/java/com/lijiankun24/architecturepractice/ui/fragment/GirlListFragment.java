@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -139,5 +140,7 @@ public class GirlListFragment extends LifecycleFragment {
                 android.R.color.holo_red_light);
 
         mLoadMorebar = view.findViewById(R.id.load_more_bar);
+        view.findViewById(R.id.fake_status_bar)
+                .setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
     }
 }

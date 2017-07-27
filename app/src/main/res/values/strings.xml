@@ -4,5 +4,8 @@
     <!-- GirlFragment begin -->
     <string name="girl_title">Beautiful Girl</string>
     <string name="girl_photo_describe">PhotoViewForTest</string>
+    <string name="girl_save">妹子不错，快开车~</string>
+    <string name="girl_save_succeed">恭喜你，已上车，请系好安全带，马上将要发车啦</string>
+    <string name="girl_save_failed">阿偶出错了呢</string>
     <!-- GirlFragment end -->
 </resources>

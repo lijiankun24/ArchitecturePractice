@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
-    android:orientation="vertical"
     tools:context=".ui.activity.MainActivity">
+
     <View
         android:id="@+id/fake_status_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/statusbar_view_height"
+        android:layout_alignParentTop="true"
         android:background="@color/colorPrimary"/>
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:actionBarSize"
+        android:layout_below="@+id/fake_status_bar"
         android:background="#2230B5E3"
         android:elevation="1dp"
         android:outlineProvider="none"
@@ -30,6 +33,7 @@
         android:id="@+id/photoView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/fake_status_bar"
         android:layout_gravity="center"
         android:transitionName="@string/girl_photo_describe"/>
-</LinearLayout>
+</RelativeLayout>
