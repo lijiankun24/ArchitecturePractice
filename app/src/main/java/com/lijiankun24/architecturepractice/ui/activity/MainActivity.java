@@ -3,7 +3,6 @@ package com.lijiankun24.architecturepractice.ui.activity;
 import android.arch.lifecycle.LifecycleActivity;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
-import android.support.v4.app.FragmentManager;
 
 import com.jaeger.library.StatusBarUtil;
 import com.lijiankun24.architecturepractice.R;
@@ -17,7 +16,7 @@ import com.lijiankun24.architecturepractice.ui.fragment.GirlListFragment;
  * <p>
  * Created by lijiankun on 17/7/4.
  */
-public class MainActivity extends LifecycleActivity implements FragmentManager.OnBackStackChangedListener {
+public class MainActivity extends LifecycleActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +29,6 @@ public class MainActivity extends LifecycleActivity implements FragmentManager.O
     public void setContentView(@LayoutRes int layoutResID) {
         super.setContentView(layoutResID);
         StatusBarUtil.setTranslucentForImageViewInFragment(MainActivity.this, null);
-    }
-
-    @Override
-    public void onBackStackChanged() {
-
     }
 
     private void showGirlList(Bundle savedInstanceState) {
@@ -57,11 +51,5 @@ public class MainActivity extends LifecycleActivity implements FragmentManager.O
                 .add(R.id.fl_fragment_container, girlFragment, GirlFragment.TAG)
                 .addToBackStack(null)
                 .commit();
-    }
-
-    private void shouldDisplayHomeUp() {
-        //Enable Up button only  if there are entries in the back stack
-        boolean canback = getSupportFragmentManager().getBackStackEntryCount() > 0;
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(canback);
     }
 }

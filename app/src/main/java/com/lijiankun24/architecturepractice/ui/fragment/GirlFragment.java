@@ -47,7 +47,7 @@ public class GirlFragment extends LifecycleFragment {
 
     private Toolbar mToolbar = null;
 
-    private Boolean mIsHidden = false;
+    private Boolean mIsToolbarHidden = false;
 
     private PhotoViewAttacher mPhotoViewAttacher;
 
@@ -94,21 +94,7 @@ public class GirlFragment extends LifecycleFragment {
         mPhotoViewAttacher.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                new AlertDialog.Builder(getContext())
-                        .setMessage(getString(R.string.girl_save))
-                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface anInterface, int i) {
-                                anInterface.dismiss();
-                            }
-                        })
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface anInterface, int i) {
-                                anInterface.dismiss();
-                                saveImage();
-                            }
-                        }).show();
+                showSaveGirlDialog();
                 return true;
             }
         });
@@ -122,7 +108,25 @@ public class GirlFragment extends LifecycleFragment {
         mToolbar = view.findViewById(R.id.toolbar);
     }
 
-    private void saveImage() {
+    private void showSaveGirlDialog() {
+        new AlertDialog.Builder(getContext())
+                .setMessage(getString(R.string.girl_save))
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface anInterface, int i) {
+                        anInterface.dismiss();
+                    }
+                })
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface anInterface, int i) {
+                        anInterface.dismiss();
+                        saveGirl();
+                    }
+                }).show();
+    }
+
+    private void saveGirl() {
         File directory = new File(Environment.getExternalStorageDirectory(), Consts.FILEROOTPATH);
         if (!directory.exists())
             directory.mkdirs();
@@ -147,14 +151,14 @@ public class GirlFragment extends LifecycleFragment {
         if (!isAdded() && getActivity() == null && TextUtils.isEmpty(msg)) {
             return;
         }
-        Snackbar.make(getActivity().getCurrentFocus(), msg, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(getActivity().getCurrentFocus(), msg, Snackbar.LENGTH_LONG).show();
     }
 
     private void toggleToolbar() {
         mToolbar.animate()
-                .translationY(mIsHidden ? 0 : -(mToolbar.getHeight() + mStatusBar.getHeight()))
+                .translationY(mIsToolbarHidden ? 0 : -(mToolbar.getHeight() + mStatusBar.getHeight()))
                 .setInterpolator(new DecelerateInterpolator(2))
                 .start();
-        mIsHidden = !mIsHidden;
+        mIsToolbarHidden = !mIsToolbarHidden;
     }
 }
