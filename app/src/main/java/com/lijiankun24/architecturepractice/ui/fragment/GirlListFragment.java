@@ -7,7 +7,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +19,7 @@ import com.lijiankun24.architecturepractice.MyApplication;
 import com.lijiankun24.architecturepractice.R;
 import com.lijiankun24.architecturepractice.data.Injection;
 import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
-import com.lijiankun24.architecturepractice.ui.activity.MainActivity;
+import com.lijiankun24.architecturepractice.ui.activity.GirlActivity;
 import com.lijiankun24.architecturepractice.ui.adapter.GirlListAdapter;
 import com.lijiankun24.architecturepractice.ui.listener.OnGirlClickListener;
 import com.lijiankun24.architecturepractice.utils.L;
@@ -35,8 +34,6 @@ import java.util.List;
  */
 public class GirlListFragment extends LifecycleFragment {
 
-    public static final String TAG = "GirlListFragment";
-
     private GirlListViewModel mGirlListViewModel = null;
 
     private GirlListAdapter mGirlListAdapter = null;
@@ -49,7 +46,7 @@ public class GirlListFragment extends LifecycleFragment {
         @Override
         public void onClick(Girl girl) {
             if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
-                ((MainActivity) getActivity()).showGirl(girl);
+                GirlActivity.startGirlActivity(getActivity(), girl.getUrl());
             }
         }
     };
@@ -89,6 +86,9 @@ public class GirlListFragment extends LifecycleFragment {
         mGirlListViewModel.getLoadMoreState().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(@Nullable Boolean state) {
+                if (state == null) {
+                    return;
+                }
                 L.i("state " + state);
                 if (mRefreshLayout.isRefreshing()) {
                     mRefreshLayout.setRefreshing(false);
@@ -136,9 +136,6 @@ public class GirlListFragment extends LifecycleFragment {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-
-        view.findViewById(R.id.fake_status_bar)
-                .setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
 
         mLoadMorebar = view.findViewById(R.id.load_more_bar);
     }

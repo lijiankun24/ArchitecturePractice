@@ -16,6 +16,10 @@ public class MyApplication extends Application {
 
     private static MyApplication INSTANCE = null;
 
+    public static MyApplication getInstance() {
+        return INSTANCE;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -24,9 +28,5 @@ public class MyApplication extends Application {
         if (Consts.DEBUG) {
             Stetho.initializeWithDefaults(this);
         }
-    }
-
-    public static MyApplication getInstance() {
-        return INSTANCE;
     }
 }
