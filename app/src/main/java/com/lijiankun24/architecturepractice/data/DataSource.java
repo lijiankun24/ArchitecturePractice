@@ -9,12 +9,12 @@ import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStory;
 import java.util.List;
 
 /**
- * GirlsDataSource.java
+ * DataSource.java
  * <p>
  * Created by lijiankun on 17/7/7.
  */
 
-public interface GirlsDataSource {
+public interface DataSource {
 
     /**
      * Girl 相关方法

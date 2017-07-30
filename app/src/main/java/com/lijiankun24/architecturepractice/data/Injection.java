@@ -1,10 +1,9 @@
 package com.lijiankun24.architecturepractice.data;
 
 import android.app.Application;
-import android.content.Context;
 
-import com.lijiankun24.architecturepractice.data.local.GirlsLocalDataSource;
-import com.lijiankun24.architecturepractice.data.remote.GirlsRemoteDataSource;
+import com.lijiankun24.architecturepractice.data.local.LocalDataSource;
+import com.lijiankun24.architecturepractice.data.remote.RemoteDataSource;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -16,8 +15,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Injection {
 
-    public static GirlsDataRepository getGirlsDataRepository(Application application) {
-        return GirlsDataRepository.getInstance(GirlsRemoteDataSource.getInstance(),
-                GirlsLocalDataSource.getInstance(), application);
+    public static DataRepository getGirlsDataRepository(Application application) {
+        return DataRepository.getInstance(RemoteDataSource.getInstance(),
+                LocalDataSource.getInstance(), application);
     }
 }

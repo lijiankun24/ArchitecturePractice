@@ -11,34 +11,34 @@ import com.lijiankun24.architecturepractice.utils.Util;
 import java.util.List;
 
 /**
- * GirlsDataRepository.java
+ * DataRepository.java
  * <p>
  * Created by lijiankun on 17/7/7.
  */
 
-public class GirlsDataRepository {
+public class DataRepository {
 
-    private static GirlsDataRepository INSTANCE = null;
+    private static DataRepository INSTANCE = null;
 
-    private final GirlsDataSource mGirlRemoteDataSource;
+    private final DataSource mGirlRemoteDataSource;
 
-    private final GirlsDataSource mGirlLocalDataSource;
+    private final DataSource mGirlLocalDataSource;
 
     private static Application sApplication = null;
 
-    private GirlsDataRepository(@NonNull GirlsDataSource girlsRemoteDataSource,
-                                @NonNull GirlsDataSource girlsLocalDataSource) {
+    private DataRepository(@NonNull DataSource girlsRemoteDataSource,
+                           @NonNull DataSource girlsLocalDataSource) {
         mGirlRemoteDataSource = girlsRemoteDataSource;
         mGirlLocalDataSource = girlsLocalDataSource;
     }
 
-    static GirlsDataRepository getInstance(@NonNull GirlsDataSource girlsRemoteDataSource,
-                                           @NonNull GirlsDataSource girlsLocalDataSource,
-                                           Application application) {
+    static DataRepository getInstance(@NonNull DataSource girlsRemoteDataSource,
+                                      @NonNull DataSource girlsLocalDataSource,
+                                      Application application) {
         if (INSTANCE == null) {
-            synchronized (GirlsDataRepository.class) {
+            synchronized (DataRepository.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new GirlsDataRepository(girlsRemoteDataSource, girlsLocalDataSource);
+                    INSTANCE = new DataRepository(girlsRemoteDataSource, girlsLocalDataSource);
                     sApplication = application;
                 }
             }

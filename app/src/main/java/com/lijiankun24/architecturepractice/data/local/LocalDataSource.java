@@ -3,7 +3,7 @@ package com.lijiankun24.architecturepractice.data.local;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
-import com.lijiankun24.architecturepractice.data.GirlsDataSource;
+import com.lijiankun24.architecturepractice.data.DataSource;
 import com.lijiankun24.architecturepractice.data.local.db.AppDatabaseManager;
 import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
 import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStory;
@@ -11,23 +11,23 @@ import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStory;
 import java.util.List;
 
 /**
- * GirlsLocalDataSource.java
+ * LocalDataSource.java
  * <p>
  * Created by lijiankun on 17/7/7.
  */
 
-public class GirlsLocalDataSource implements GirlsDataSource {
+public class LocalDataSource implements DataSource {
 
-    private static GirlsLocalDataSource INSTANCE = null;
+    private static LocalDataSource INSTANCE = null;
 
-    private GirlsLocalDataSource() {
+    private LocalDataSource() {
     }
 
-    public static GirlsLocalDataSource getInstance() {
+    public static LocalDataSource getInstance() {
         if (INSTANCE == null) {
-            synchronized (GirlsLocalDataSource.class) {
+            synchronized (LocalDataSource.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new GirlsLocalDataSource();
+                    INSTANCE = new LocalDataSource();
                 }
             }
         }

@@ -14,7 +14,7 @@ import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.jaeger.library.StatusBarUtil;
 import com.lijiankun24.architecturepractice.R;
 import com.lijiankun24.architecturepractice.ui.fragment.GirlListFragment;
-import com.lijiankun24.architecturepractice.ui.fragment.ZhihuFragment;
+import com.lijiankun24.architecturepractice.ui.fragment.ZhihuListFragment;
 import com.lijiankun24.architecturepractice.utils.Util;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class MainActivity extends LifecycleActivity {
         initStatusBar();
 
         mFragmentList.add(new GirlListFragment());
-        mFragmentList.add(new ZhihuFragment());
+        mFragmentList.add(new ZhihuListFragment());
 
         mViewPager = findViewById(R.id.vp_home);
         mViewPager.setAdapter(new MainFragmentPagerAdapter(getSupportFragmentManager()));

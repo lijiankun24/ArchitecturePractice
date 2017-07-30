@@ -4,7 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
-import com.lijiankun24.architecturepractice.data.GirlsDataSource;
+import com.lijiankun24.architecturepractice.data.DataSource;
 import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
 import com.lijiankun24.architecturepractice.data.remote.api.ApiGirl;
 import com.lijiankun24.architecturepractice.data.remote.api.ApiManager;
@@ -20,14 +20,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * GirlsRemoteDataSource.java
+ * RemoteDataSource.java
  * <p>
  * Created by lijiankun on 17/7/7.
  */
 
-public class GirlsRemoteDataSource implements GirlsDataSource {
+public class RemoteDataSource implements DataSource {
 
-    private static GirlsRemoteDataSource INSTANCE = null;
+    private static RemoteDataSource INSTANCE = null;
 
     private final MutableLiveData<Boolean> mIsLoadingGirlList;
 
@@ -41,23 +41,26 @@ public class GirlsRemoteDataSource implements GirlsDataSource {
 
     private final ApiZhihu mApiZhihu;
 
+    private String mZhihuPageDate;
+
     {
         mIsLoadingGirlList = new MutableLiveData<>();
-        mIsLoadingZhihuList = new MutableLiveData<>();
         mGirlList = new MutableLiveData<>();
+
+        mIsLoadingZhihuList = new MutableLiveData<>();
         mZhihuList = new MutableLiveData<>();
     }
 
-    private GirlsRemoteDataSource() {
+    private RemoteDataSource() {
         mApiGirl = ApiManager.getInstance().getApiGirl();
         mApiZhihu = ApiManager.getInstance().getApiZhihu();
     }
 
-    public static GirlsRemoteDataSource getInstance() {
+    public static RemoteDataSource getInstance() {
         if (INSTANCE == null) {
-            synchronized (GirlsRemoteDataSource.class) {
+            synchronized (RemoteDataSource.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new GirlsRemoteDataSource();
+                    INSTANCE = new RemoteDataSource();
                 }
             }
         }
@@ -120,13 +123,14 @@ public class GirlsRemoteDataSource implements GirlsDataSource {
     @Override
     public LiveData<List<ZhihuStory>> getMoreZhihuList(String date) {
         mIsLoadingZhihuList.setValue(true);
-        mApiZhihu.getTheDaily(date)
+        mApiZhihu.getTheDaily(mZhihuPageDate)
                 .enqueue(new Callback<ZhihuData>() {
                     @Override
                     public void onResponse(Call<ZhihuData> call, Response<ZhihuData> response) {
                         mIsLoadingZhihuList.setValue(false);
                         if (response.isSuccessful()) {
                             mZhihuList.setValue(response.body().getStories());
+                            mZhihuPageDate = response.body().getDate();
                         }
                     }
 

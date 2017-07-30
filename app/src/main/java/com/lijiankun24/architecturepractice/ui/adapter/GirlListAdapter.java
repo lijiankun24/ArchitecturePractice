@@ -79,13 +79,9 @@ public class GirlListAdapter extends RecyclerView.Adapter<GirlListAdapter.ViewHo
 
         ViewHolder(View view) {
             super(view);
-
             mRoot = view.findViewById(R.id.rl_girl_item_root);
-
             mTVGirlName = view.findViewById(R.id.tv_girl_name);
-
             mTVGirlAge = view.findViewById(R.id.tv_girl_age);
-
             mIVGirlAvatar = view.findViewById(R.id.iv_girl_avatar);
         }
 
