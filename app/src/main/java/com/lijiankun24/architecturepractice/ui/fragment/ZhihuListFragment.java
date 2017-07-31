@@ -83,8 +83,7 @@ public class ZhihuListFragment extends LifecycleFragment {
         if (view == null) {
             return;
         }
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
-                LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         mAdapter = new ZhihuListAdapter(getContext());
         RecyclerView recyclerView = view.findViewById(R.id.rv_zhihu_list);
         recyclerView.setAdapter(mAdapter);
@@ -93,7 +92,8 @@ public class ZhihuListFragment extends LifecycleFragment {
 
         SwipeRefreshLayout refreshLayout = view.findViewById(R.id.srl_zhihu);
         refreshLayout.setOnRefreshListener(new ZhihuSwipeListener());
-        refreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+        refreshLayout.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
@@ -104,7 +104,7 @@ public class ZhihuListFragment extends LifecycleFragment {
     private class ZhihuSwipeListener implements SwipeRefreshLayout.OnRefreshListener {
         @Override
         public void onRefresh() {
-            mListViewModel.loadNextPageZhihu();
+            mListViewModel.refreshZhihusData();
         }
     }
 
@@ -112,7 +112,14 @@ public class ZhihuListFragment extends LifecycleFragment {
 
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-            super.onScrollStateChanged(recyclerView, newState);
+            LinearLayoutManager layoutManager = (LinearLayoutManager)
+                    recyclerView.getLayoutManager();
+            int lastPosition = layoutManager
+                    .findLastCompletelyVisibleItemPosition();
+            if (lastPosition == mAdapter.getItemCount() - 1) {
+                // 上拉加载更多数据
+                mListViewModel.loadNextPageZhihu();
+            }
         }
     }
 }

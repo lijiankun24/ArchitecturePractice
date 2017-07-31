@@ -56,10 +56,10 @@ public class ZhihuListViewModel extends AndroidViewModel {
 
     public void loadNextPageZhihu() {
         mLoadHandler.startLoadGirls();
-        mZhihuPageDate.setValue("nextPage");
+        mZhihuPageDate.setValue(String.valueOf(System.currentTimeMillis()));
     }
 
-    public LiveData<Boolean> isLoadingZhihuList(){
+    public LiveData<Boolean> isLoadingZhihuList() {
         return mLoadHandler.getLoadMoreState();
     }
 

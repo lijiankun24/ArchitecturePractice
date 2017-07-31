@@ -101,15 +101,14 @@ public class RemoteDataSource implements DataSource {
 
     @Override
     public LiveData<List<ZhihuStory>> getLastZhihuList() {
-        mIsLoadingZhihuList.setValue(true);
         mApiZhihu.getLatestNews()
                 .enqueue(new Callback<ZhihuData>() {
                     @Override
                     public void onResponse(Call<ZhihuData> call, Response<ZhihuData> response) {
-                        mIsLoadingZhihuList.setValue(false);
                         if (response.isSuccessful()) {
                             mZhihuList.setValue(response.body().getStories());
                         }
+                        mIsLoadingZhihuList.setValue(false);
                     }
 
                     @Override
@@ -122,16 +121,15 @@ public class RemoteDataSource implements DataSource {
 
     @Override
     public LiveData<List<ZhihuStory>> getMoreZhihuList(String date) {
-        mIsLoadingZhihuList.setValue(true);
         mApiZhihu.getTheDaily(mZhihuPageDate)
                 .enqueue(new Callback<ZhihuData>() {
                     @Override
                     public void onResponse(Call<ZhihuData> call, Response<ZhihuData> response) {
-                        mIsLoadingZhihuList.setValue(false);
                         if (response.isSuccessful()) {
                             mZhihuList.setValue(response.body().getStories());
                             mZhihuPageDate = response.body().getDate();
                         }
+                        mIsLoadingZhihuList.setValue(false);
                     }
 
                     @Override
