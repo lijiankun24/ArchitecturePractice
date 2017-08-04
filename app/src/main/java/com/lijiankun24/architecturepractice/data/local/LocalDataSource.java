@@ -7,6 +7,7 @@ import com.lijiankun24.architecturepractice.data.DataSource;
 import com.lijiankun24.architecturepractice.data.local.db.AppDatabaseManager;
 import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
 import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStory;
+import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStoryDetail;
 
 import java.util.List;
 
@@ -61,7 +62,17 @@ public class LocalDataSource implements DataSource {
     }
 
     @Override
+    public LiveData<ZhihuStoryDetail> getZhihuDetail(String id) {
+        return null;
+    }
+
+    @Override
     public LiveData<Boolean> isLoadingZhihuList() {
+        return null;
+    }
+
+    @Override
+    public LiveData<Boolean> isLoadingZhihuDetail() {
         return null;
     }
 }

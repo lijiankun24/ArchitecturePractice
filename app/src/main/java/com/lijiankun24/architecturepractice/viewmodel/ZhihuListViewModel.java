@@ -27,9 +27,9 @@ public class ZhihuListViewModel extends AndroidViewModel {
 
     private MutableLiveData<String> mZhihuPageDate = new MutableLiveData<>();
 
-    private LoadHandler mLoadHandler = null;
+    private final LiveData<List<ZhihuStory>> mZhihuList;
 
-    private LiveData<List<ZhihuStory>> mZhihuList = null;
+    private LoadHandler mLoadHandler = null;
 
     private DataRepository mDataRepository = null;
 

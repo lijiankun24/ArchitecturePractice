@@ -12,6 +12,7 @@ import com.lijiankun24.architecturepractice.data.remote.api.ApiZhihu;
 import com.lijiankun24.architecturepractice.data.remote.model.GirlData;
 import com.lijiankun24.architecturepractice.data.remote.model.ZhihuData;
 import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStory;
+import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStoryDetail;
 
 import java.util.List;
 
@@ -37,6 +38,8 @@ public class RemoteDataSource implements DataSource {
 
     private final MutableLiveData<List<ZhihuStory>> mZhihuList;
 
+    private final MutableLiveData<ZhihuStoryDetail> mZhihuDetail;
+
     private final ApiGirl mApiGirl;
 
     private final ApiZhihu mApiZhihu;
@@ -48,6 +51,7 @@ public class RemoteDataSource implements DataSource {
         mGirlList = new MutableLiveData<>();
 
         mIsLoadingZhihuList = new MutableLiveData<>();
+        mZhihuDetail = new MutableLiveData<>();
         mZhihuList = new MutableLiveData<>();
     }
 
@@ -107,6 +111,7 @@ public class RemoteDataSource implements DataSource {
                     public void onResponse(Call<ZhihuData> call, Response<ZhihuData> response) {
                         if (response.isSuccessful()) {
                             mZhihuList.setValue(response.body().getStories());
+                            mZhihuPageDate = response.body().getDate();
                         }
                         mIsLoadingZhihuList.setValue(false);
                     }
@@ -141,7 +146,31 @@ public class RemoteDataSource implements DataSource {
     }
 
     @Override
+    public LiveData<ZhihuStoryDetail> getZhihuDetail(String id) {
+        mApiZhihu.getZhiHuStoryDetail(id)
+                .enqueue(new Callback<ZhihuStoryDetail>() {
+                    @Override
+                    public void onResponse(Call<ZhihuStoryDetail> call, Response<ZhihuStoryDetail> response) {
+                        if (response.isSuccessful()) {
+                            mZhihuDetail.setValue(response.body());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ZhihuStoryDetail> call, Throwable t) {
+
+                    }
+                });
+        return mZhihuDetail;
+    }
+
+    @Override
     public MutableLiveData<Boolean> isLoadingZhihuList() {
         return mIsLoadingZhihuList;
+    }
+
+    @Override
+    public LiveData<Boolean> isLoadingZhihuDetail() {
+        return null;
     }
 }

@@ -25,5 +25,5 @@ public interface ApiZhihu {
     Call<ZhihuData> getTheDaily(@Path("date") String date);
 
     @GET("api/4/news/{id}")
-    Observable<ZhihuStoryDetail> getZhiHuStoryDetail(@Path("id") String id);
+    Call<ZhihuStoryDetail> getZhiHuStoryDetail(@Path("id") String id);
 }

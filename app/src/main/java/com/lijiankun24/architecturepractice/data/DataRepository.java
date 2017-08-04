@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 
 import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
 import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStory;
+import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStoryDetail;
 import com.lijiankun24.architecturepractice.utils.Util;
 
 import java.util.List;
@@ -65,6 +66,10 @@ public class DataRepository {
         } else {
             return mGirlRemoteDataSource.getMoreZhihuList(date);
         }
+    }
+
+    public LiveData<ZhihuStoryDetail> getZhihuDetail(String id) {
+        return mGirlRemoteDataSource.getZhihuDetail(id);
     }
 
     public LiveData<Boolean> isLoadingZhihuList() {

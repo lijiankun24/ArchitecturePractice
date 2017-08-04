@@ -1,6 +1,7 @@
 package com.lijiankun24.architecturepractice.ui.activity;
 
 import android.app.Activity;
+import android.arch.lifecycle.LifecycleActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,7 +11,6 @@ import android.os.Environment;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
@@ -29,7 +29,7 @@ import java.util.Date;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-public class GirlActivity extends AppCompatActivity {
+public class GirlActivity extends LifecycleActivity {
 
     private static final String GIRL_IMG_URL = "girl_img_url";
 

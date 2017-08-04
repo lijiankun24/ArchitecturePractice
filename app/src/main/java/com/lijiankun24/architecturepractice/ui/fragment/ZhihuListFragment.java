@@ -34,6 +34,8 @@ public class ZhihuListFragment extends LifecycleFragment {
 
     private ZhihuListViewModel mListViewModel = null;
 
+    private SwipeRefreshLayout mRefreshLayout = null;
+
     private ZhihuListAdapter mAdapter = null;
 
     private ProgressBar mLoadMorebar = null;
@@ -63,6 +65,7 @@ public class ZhihuListFragment extends LifecycleFragment {
                 if (stories == null || stories.size() <= 0) {
                     return;
                 }
+                L.i("size is " + stories.size());
                 mAdapter.setStoryList(stories);
             }
         });
@@ -73,6 +76,7 @@ public class ZhihuListFragment extends LifecycleFragment {
                     return;
                 }
                 L.i("state " + aBoolean);
+                mRefreshLayout.setRefreshing(false);
                 mLoadMorebar.setVisibility(aBoolean ? View.VISIBLE : View.INVISIBLE);
             }
         });
@@ -90,9 +94,9 @@ public class ZhihuListFragment extends LifecycleFragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addOnScrollListener(new ZhihuOnScrollListener());
 
-        SwipeRefreshLayout refreshLayout = view.findViewById(R.id.srl_zhihu);
-        refreshLayout.setOnRefreshListener(new ZhihuSwipeListener());
-        refreshLayout.setColorSchemeResources(
+        mRefreshLayout = view.findViewById(R.id.srl_zhihu);
+        mRefreshLayout.setOnRefreshListener(new ZhihuSwipeListener());
+        mRefreshLayout.setColorSchemeResources(
                 android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
@@ -104,6 +108,7 @@ public class ZhihuListFragment extends LifecycleFragment {
     private class ZhihuSwipeListener implements SwipeRefreshLayout.OnRefreshListener {
         @Override
         public void onRefresh() {
+            mAdapter.clearStoryList();
             mListViewModel.refreshZhihusData();
         }
     }

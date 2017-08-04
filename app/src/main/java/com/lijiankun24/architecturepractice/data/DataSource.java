@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
 import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStory;
+import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStoryDetail;
 
 import java.util.List;
 
@@ -33,5 +34,9 @@ public interface DataSource {
 
     LiveData<List<ZhihuStory>> getMoreZhihuList(String date);
 
+    LiveData<ZhihuStoryDetail> getZhihuDetail(String id);
+
     LiveData<Boolean> isLoadingZhihuList();
+
+    LiveData<Boolean> isLoadingZhihuDetail();
 }
