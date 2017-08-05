@@ -1,5 +1,7 @@
 package com.lijiankun24.architecturepractice.data.remote.model;
 
+import com.lijiankun24.architecturepractice.data.local.db.entity.ZhihuStory;
+
 import java.util.List;
 
 /**

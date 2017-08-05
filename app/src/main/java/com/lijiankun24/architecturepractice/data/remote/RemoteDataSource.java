@@ -2,16 +2,16 @@ package com.lijiankun24.architecturepractice.data.remote;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.support.annotation.NonNull;
 
 import com.lijiankun24.architecturepractice.data.DataSource;
+import com.lijiankun24.architecturepractice.data.local.db.AppDatabaseManager;
 import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
+import com.lijiankun24.architecturepractice.data.local.db.entity.ZhihuStory;
 import com.lijiankun24.architecturepractice.data.remote.api.ApiGirl;
 import com.lijiankun24.architecturepractice.data.remote.api.ApiManager;
 import com.lijiankun24.architecturepractice.data.remote.api.ApiZhihu;
 import com.lijiankun24.architecturepractice.data.remote.model.GirlData;
 import com.lijiankun24.architecturepractice.data.remote.model.ZhihuData;
-import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStory;
 import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStoryDetail;
 
 import java.util.List;
@@ -81,6 +81,7 @@ public class RemoteDataSource implements DataSource {
                         mIsLoadingGirlList.setValue(false);
                         if (response.isSuccessful() || !response.body().error) {
                             mGirlList.setValue(response.body().results);
+                            refreshLocalGirlList(response.body().results);
                         }
                     }
 
@@ -93,15 +94,9 @@ public class RemoteDataSource implements DataSource {
     }
 
     @Override
-    public LiveData<Girl> getGirl(@NonNull String id) {
-        return null;
-    }
-
-    @Override
     public MutableLiveData<Boolean> isLoadingGirlList() {
         return mIsLoadingGirlList;
     }
-
 
     @Override
     public LiveData<List<ZhihuStory>> getLastZhihuList() {
@@ -111,6 +106,7 @@ public class RemoteDataSource implements DataSource {
                     public void onResponse(Call<ZhihuData> call, Response<ZhihuData> response) {
                         if (response.isSuccessful()) {
                             mZhihuList.setValue(response.body().getStories());
+                            refreshLocalZhihuList(response.body().getStories());
                             mZhihuPageDate = response.body().getDate();
                         }
                         mIsLoadingZhihuList.setValue(false);
@@ -132,6 +128,7 @@ public class RemoteDataSource implements DataSource {
                     public void onResponse(Call<ZhihuData> call, Response<ZhihuData> response) {
                         if (response.isSuccessful()) {
                             mZhihuList.setValue(response.body().getStories());
+                            refreshLocalZhihuList(response.body().getStories());
                             mZhihuPageDate = response.body().getDate();
                         }
                         mIsLoadingZhihuList.setValue(false);
@@ -169,8 +166,17 @@ public class RemoteDataSource implements DataSource {
         return mIsLoadingZhihuList;
     }
 
-    @Override
-    public LiveData<Boolean> isLoadingZhihuDetail() {
-        return null;
+    private void refreshLocalGirlList(List<Girl> girlList) {
+        if (girlList == null || girlList.isEmpty()) {
+            return;
+        }
+        AppDatabaseManager.getInstance().insertGirlList(girlList);
+    }
+
+    private void refreshLocalZhihuList(List<ZhihuStory> zhihuStoryList) {
+        if (zhihuStoryList == null || zhihuStoryList.isEmpty()) {
+            return;
+        }
+        AppDatabaseManager.getInstance().insertZhihuList(zhihuStoryList);
     }
 }

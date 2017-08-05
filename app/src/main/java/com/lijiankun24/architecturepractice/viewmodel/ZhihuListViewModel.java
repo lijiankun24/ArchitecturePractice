@@ -12,8 +12,10 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.lijiankun24.architecturepractice.MyApplication;
 import com.lijiankun24.architecturepractice.data.DataRepository;
-import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStory;
+import com.lijiankun24.architecturepractice.data.local.db.entity.ZhihuStory;
+import com.lijiankun24.architecturepractice.utils.Util;
 
 import java.util.List;
 
@@ -55,6 +57,9 @@ public class ZhihuListViewModel extends AndroidViewModel {
     }
 
     public void loadNextPageZhihu() {
+        if (!Util.isNetworkConnected(MyApplication.getInstance())) {
+            return;
+        }
         mLoadHandler.startLoadGirls();
         mZhihuPageDate.setValue(String.valueOf(System.currentTimeMillis()));
     }

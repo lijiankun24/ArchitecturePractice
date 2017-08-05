@@ -1,12 +1,17 @@
-package com.lijiankun24.architecturepractice.data.remote.model;
+package com.lijiankun24.architecturepractice.data.local.db.entity;
+
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 
 /**
  * ZhihuStory.java
  * <p>
  * Created by lijiankun on 17/7/23.
  */
+@Entity(tableName = "zhihustorys")
 public class ZhihuStory {
 
+    @PrimaryKey
     private String id;
 
     private int type;
@@ -17,13 +22,15 @@ public class ZhihuStory {
 
     private String[] images;
 
-    public ZhihuStory(String id, int type, String ga_prefix,
-                      String title, String[] images) {
-        this.id = id;
-        this.type = type;
-        this.ga_prefix = ga_prefix;
-        this.title = title;
-        this.images = images;
+    public ZhihuStory() {
+    }
+
+    public ZhihuStory(ZhihuStory zhihuStory) {
+        this.id = zhihuStory.getId();
+        this.type = zhihuStory.getType();
+        this.ga_prefix = zhihuStory.getGa_prefix();
+        this.title = zhihuStory.getTitle();
+        this.images = zhihuStory.getImages();
     }
 
     public String[] getImages() {

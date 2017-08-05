@@ -21,8 +21,9 @@ import com.lijiankun24.architecturepractice.data.Injection;
 import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
 import com.lijiankun24.architecturepractice.ui.activity.GirlActivity;
 import com.lijiankun24.architecturepractice.ui.adapter.GirlListAdapter;
-import com.lijiankun24.architecturepractice.ui.listener.OnGirlClickListener;
+import com.lijiankun24.architecturepractice.ui.listener.OnItemClickListener;
 import com.lijiankun24.architecturepractice.utils.L;
+import com.lijiankun24.architecturepractice.utils.Util;
 import com.lijiankun24.architecturepractice.viewmodel.GirlListViewModel;
 
 import java.util.List;
@@ -42,11 +43,17 @@ public class GirlListFragment extends LifecycleFragment {
 
     private ProgressBar mLoadMorebar = null;
 
-    private final OnGirlClickListener mGirlClickListener = new OnGirlClickListener() {
+    private View RLGirlRoot = null;
+
+    private final OnItemClickListener<Girl> mGirlClickListener = new OnItemClickListener<Girl>() {
         @Override
         public void onClick(Girl girl) {
             if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
-                GirlActivity.startGirlActivity(getActivity(), girl.getUrl());
+                if (Util.isNetworkConnected(MyApplication.getInstance())) {
+                    GirlActivity.startGirlActivity(getActivity(), girl.getUrl());
+                } else {
+                    Util.showSnackbar(RLGirlRoot, getString(R.string.network_error));
+                }
             }
         }
     };
@@ -71,7 +78,7 @@ public class GirlListFragment extends LifecycleFragment {
         }
         GirlListViewModel.Factory factory = new GirlListViewModel
                 .Factory(MyApplication.getInstance(),
-                Injection.getGirlsDataRepository(MyApplication.getInstance()));
+                Injection.getDataRepository(MyApplication.getInstance()));
         mGirlListViewModel = ViewModelProviders.of(this, factory).get(GirlListViewModel.class);
         mGirlListViewModel.getGilrsLiveData().observe(this, new Observer<List<Girl>>() {
             @Override
@@ -138,5 +145,6 @@ public class GirlListFragment extends LifecycleFragment {
                 android.R.color.holo_red_light);
 
         mLoadMorebar = view.findViewById(R.id.load_more_bar);
+        RLGirlRoot = view.findViewById(R.id.rl_girl_root);
     }
 }

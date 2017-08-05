@@ -6,7 +6,7 @@ package com.lijiankun24.architecturepractice.about;
  * Created by lijiankun on 17/5/2.
  */
 
-class Author {
+public class Author {
 
     private String github = null;
 

@@ -1,12 +1,11 @@
 package com.lijiankun24.architecturepractice.data.local;
 
 import android.arch.lifecycle.LiveData;
-import android.support.annotation.NonNull;
 
 import com.lijiankun24.architecturepractice.data.DataSource;
 import com.lijiankun24.architecturepractice.data.local.db.AppDatabaseManager;
 import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
-import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStory;
+import com.lijiankun24.architecturepractice.data.local.db.entity.ZhihuStory;
 import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStoryDetail;
 
 import java.util.List;
@@ -41,19 +40,13 @@ public class LocalDataSource implements DataSource {
     }
 
     @Override
-    public LiveData<Girl> getGirl(@NonNull String id) {
-        return null;
-    }
-
-    @Override
     public LiveData<Boolean> isLoadingGirlList() {
-        return null;
+        return AppDatabaseManager.getInstance().isLoadingGirlList();
     }
-
 
     @Override
     public LiveData<List<ZhihuStory>> getLastZhihuList() {
-        return null;
+        return AppDatabaseManager.getInstance().loadZhihuList();
     }
 
     @Override
@@ -68,11 +61,6 @@ public class LocalDataSource implements DataSource {
 
     @Override
     public LiveData<Boolean> isLoadingZhihuList() {
-        return null;
-    }
-
-    @Override
-    public LiveData<Boolean> isLoadingZhihuDetail() {
-        return null;
+        return AppDatabaseManager.getInstance().isLoadingZhihuList();
     }
 }

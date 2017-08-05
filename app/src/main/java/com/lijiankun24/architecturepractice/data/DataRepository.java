@@ -5,7 +5,7 @@ import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
 import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
-import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStory;
+import com.lijiankun24.architecturepractice.data.local.db.entity.ZhihuStory;
 import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStoryDetail;
 import com.lijiankun24.architecturepractice.utils.Util;
 
@@ -21,25 +21,25 @@ public class DataRepository {
 
     private static DataRepository INSTANCE = null;
 
-    private final DataSource mGirlRemoteDataSource;
+    private final DataSource mRemoteDataSource;
 
-    private final DataSource mGirlLocalDataSource;
+    private final DataSource mLocalDataSource;
 
     private static Application sApplication = null;
 
-    private DataRepository(@NonNull DataSource girlsRemoteDataSource,
-                           @NonNull DataSource girlsLocalDataSource) {
-        mGirlRemoteDataSource = girlsRemoteDataSource;
-        mGirlLocalDataSource = girlsLocalDataSource;
+    private DataRepository(@NonNull DataSource remoteDataSource,
+                           @NonNull DataSource localDataSource) {
+        mRemoteDataSource = remoteDataSource;
+        mLocalDataSource = localDataSource;
     }
 
-    static DataRepository getInstance(@NonNull DataSource girlsRemoteDataSource,
-                                      @NonNull DataSource girlsLocalDataSource,
+    static DataRepository getInstance(@NonNull DataSource remoteDataSource,
+                                      @NonNull DataSource localDataSource,
                                       Application application) {
         if (INSTANCE == null) {
             synchronized (DataRepository.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new DataRepository(girlsRemoteDataSource, girlsLocalDataSource);
+                    INSTANCE = new DataRepository(remoteDataSource, localDataSource);
                     sApplication = application;
                 }
             }
@@ -49,30 +49,46 @@ public class DataRepository {
 
     public LiveData<List<Girl>> getGirlList(int index) {
         if (Util.isNetworkConnected(sApplication.getApplicationContext())) {
-            return mGirlRemoteDataSource.getGirlList(index);
+            return mRemoteDataSource.getGirlList(index);
         } else {
-            return mGirlLocalDataSource.getGirlList(index);
+            return mLocalDataSource.getGirlList(index);
         }
     }
 
     public LiveData<Boolean> isLoadingGirlList() {
-        return mGirlRemoteDataSource.isLoadingGirlList();
+        if (Util.isNetworkConnected(sApplication.getApplicationContext())) {
+            return mRemoteDataSource.isLoadingGirlList();
+        } else {
+            return mLocalDataSource.isLoadingGirlList();
+        }
     }
 
 
     public LiveData<List<ZhihuStory>> getZhihuList(@NonNull String date) {
-        if (date.equals("today")) {
-            return mGirlRemoteDataSource.getLastZhihuList();
+        if (Util.isNetworkConnected(sApplication.getApplicationContext())) {
+            if (date.equals("today")) {
+                return mRemoteDataSource.getLastZhihuList();
+            } else {
+                return mRemoteDataSource.getMoreZhihuList(date);
+            }
         } else {
-            return mGirlRemoteDataSource.getMoreZhihuList(date);
+            if (date.equals("today")) {
+                return mLocalDataSource.getLastZhihuList();
+            } else {
+                return mLocalDataSource.getMoreZhihuList(date);
+            }
         }
     }
 
     public LiveData<ZhihuStoryDetail> getZhihuDetail(String id) {
-        return mGirlRemoteDataSource.getZhihuDetail(id);
+        return mRemoteDataSource.getZhihuDetail(id);
     }
 
     public LiveData<Boolean> isLoadingZhihuList() {
-        return mGirlRemoteDataSource.isLoadingZhihuList();
+        if (Util.isNetworkConnected(sApplication.getApplicationContext())) {
+            return mRemoteDataSource.isLoadingZhihuList();
+        } else {
+            return mLocalDataSource.isLoadingZhihuList();
+        }
     }
 }

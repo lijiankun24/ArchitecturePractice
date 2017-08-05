@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -18,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.lijiankun24.architecturepractice.R;
 import com.lijiankun24.architecturepractice.utils.Consts;
+import com.lijiankun24.architecturepractice.utils.Util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -126,19 +126,11 @@ public class GirlActivity extends BaseActivity {
             Uri uri = Uri.fromFile(file);
             intent.setData(uri);
             GirlActivity.this.getApplicationContext().sendBroadcast(intent);
-            showSnackbar(R.string.girl_save_succeed);
+            Util.showSnackbar(mRLGirlRoot, getString(R.string.girl_save_succeed));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            showSnackbar(R.string.girl_save_failed);
+            Util.showSnackbar(mRLGirlRoot, getString(R.string.girl_save_failed));
         }
-    }
-
-    private void showSnackbar(int msgRes) {
-        String msg = getString(msgRes);
-        if (TextUtils.isEmpty(msg)) {
-            return;
-        }
-        Snackbar.make(mRLGirlRoot, msg, Snackbar.LENGTH_LONG).show();
     }
 
     private void toggleToolbar() {

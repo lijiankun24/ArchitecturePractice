@@ -17,9 +17,12 @@ import android.widget.ProgressBar;
 import com.lijiankun24.architecturepractice.MyApplication;
 import com.lijiankun24.architecturepractice.R;
 import com.lijiankun24.architecturepractice.data.Injection;
-import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStory;
+import com.lijiankun24.architecturepractice.data.local.db.entity.ZhihuStory;
+import com.lijiankun24.architecturepractice.ui.activity.ZhihuActivity;
 import com.lijiankun24.architecturepractice.ui.adapter.ZhihuListAdapter;
+import com.lijiankun24.architecturepractice.ui.listener.OnItemClickListener;
 import com.lijiankun24.architecturepractice.utils.L;
+import com.lijiankun24.architecturepractice.utils.Util;
 import com.lijiankun24.architecturepractice.viewmodel.ZhihuListViewModel;
 
 import java.util.List;
@@ -40,6 +43,21 @@ public class ZhihuListFragment extends LifecycleFragment {
 
     private ProgressBar mLoadMorebar = null;
 
+    private View mRLZhihuRoot = null;
+
+    private final OnItemClickListener<ZhihuStory> mZhihuOnItemClickListener =
+            new OnItemClickListener<ZhihuStory>() {
+                @Override
+                public void onClick(ZhihuStory zhihuStory) {
+                    if (Util.isNetworkConnected(MyApplication.getInstance())) {
+                        ZhihuActivity.startZhihuActivity(getActivity(), zhihuStory.getId(),
+                                zhihuStory.getTitle());
+                    } else {
+                        Util.showSnackbar(mRLZhihuRoot, getString(R.string.network_error));
+                    }
+                }
+            };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,7 +75,7 @@ public class ZhihuListFragment extends LifecycleFragment {
     private void subscribeUI() {
         ZhihuListViewModel.Factory factory = new ZhihuListViewModel
                 .Factory(MyApplication.getInstance()
-                , Injection.getGirlsDataRepository(MyApplication.getInstance()));
+                , Injection.getDataRepository(MyApplication.getInstance()));
         mListViewModel = ViewModelProviders.of(this, factory).get(ZhihuListViewModel.class);
         mListViewModel.getZhihuList().observe(this, new Observer<List<ZhihuStory>>() {
             @Override
@@ -88,7 +106,7 @@ public class ZhihuListFragment extends LifecycleFragment {
             return;
         }
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new ZhihuListAdapter(getContext());
+        mAdapter = new ZhihuListAdapter(getContext(), mZhihuOnItemClickListener);
         RecyclerView recyclerView = view.findViewById(R.id.rv_zhihu_list);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(layoutManager);
@@ -103,6 +121,7 @@ public class ZhihuListFragment extends LifecycleFragment {
                 android.R.color.holo_red_light);
 
         mLoadMorebar = view.findViewById(R.id.bar_load_more_zhihu);
+        mRLZhihuRoot = view.findViewById(R.id.rl_zhihu_root);
     }
 
     private class ZhihuSwipeListener implements SwipeRefreshLayout.OnRefreshListener {

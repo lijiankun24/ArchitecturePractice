@@ -1,7 +1,9 @@
 package com.lijiankun24.architecturepractice.ui.activity;
 
+import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -38,6 +40,18 @@ public class ZhihuActivity extends BaseActivity {
 
     private String mZhihuId = null;
 
+
+    public static void startZhihuActivity(Activity activity, String zhihuId, String zhihuTitle) {
+        if (activity == null || TextUtils.isEmpty(zhihuId)
+                || TextUtils.isEmpty(zhihuTitle)) {
+            return;
+        }
+        Intent intent = new Intent(activity, ZhihuActivity.class);
+        intent.putExtra(ZhihuActivity.ZHIHU_ID, zhihuId);
+        intent.putExtra(ZhihuActivity.ZHIHU_TITLE, zhihuTitle);
+        activity.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +63,7 @@ public class ZhihuActivity extends BaseActivity {
 
     private void subscribeUI() {
         ZhihuViewModel.Factory factory = new ZhihuViewModel.Factory(MyApplication.getInstance(),
-                Injection.getGirlsDataRepository(MyApplication.getInstance()), mZhihuId);
+                Injection.getDataRepository(MyApplication.getInstance()), mZhihuId);
         ZhihuViewModel zhihuViewModel = ViewModelProviders.of(this, factory).get(ZhihuViewModel.class);
         zhihuViewModel.getZhihuDetail().observe(this, new Observer<ZhihuStoryDetail>() {
             @Override
@@ -98,7 +112,7 @@ public class ZhihuActivity extends BaseActivity {
         initToolbar(toolbar, true, mZhihuTitle);
         marqueeText.setText(mZhihuTitle);
         toolbarLayout.setTitle(mZhihuTitle);
-        appBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener(){
+        appBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
             @Override
             public void onStateChanged(AppBarLayout appBarLayout, State state) {
                 if (state == State.EXPANDED) {

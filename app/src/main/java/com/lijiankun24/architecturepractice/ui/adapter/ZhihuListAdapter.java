@@ -1,7 +1,6 @@
 package com.lijiankun24.architecturepractice.ui.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +10,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.lijiankun24.architecturepractice.R;
-import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStory;
-import com.lijiankun24.architecturepractice.ui.activity.ZhihuActivity;
+import com.lijiankun24.architecturepractice.data.local.db.entity.ZhihuStory;
+import com.lijiankun24.architecturepractice.ui.listener.OnItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +24,16 @@ import java.util.List;
 
 public class ZhihuListAdapter extends RecyclerView.Adapter<ZhihuListAdapter.ZhihuViewHolder> {
 
+    private OnItemClickListener<ZhihuStory> mZhihuOnItemClickListener = null;
+
     private Context mContext = null;
 
     private List<ZhihuStory> mStoryList = null;
 
-    public ZhihuListAdapter(Context context) {
+    public ZhihuListAdapter(Context context, OnItemClickListener<ZhihuStory> listener) {
         mStoryList = new ArrayList<>();
         mContext = context;
+        mZhihuOnItemClickListener = listener;
     }
 
     @Override
@@ -42,10 +44,17 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<ZhihuListAdapter.Zhih
 
     @Override
     public void onBindViewHolder(ZhihuViewHolder holder, int position) {
-        ZhihuStory zhihuStory = mStoryList.get(position);
+        final ZhihuStory zhihuStory = mStoryList.get(position);
         holder.getTVZhihuTitle().setText(zhihuStory.getTitle());
         holder.getTVZhihuTime().setText(zhihuStory.getGa_prefix());
-        holder.getLLZhihu().setOnClickListener(new ItemClickListener(zhihuStory.getTitle(), zhihuStory.getId()));
+        holder.getLLZhihu().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mZhihuOnItemClickListener != null){
+                    mZhihuOnItemClickListener.onClick(zhihuStory);
+                }
+            }
+        });
         Glide.with(mContext)
                 .load(zhihuStory.getImages()[0])
                 .centerCrop()
@@ -68,26 +77,6 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<ZhihuListAdapter.Zhih
     public void clearStoryList() {
         mStoryList.clear();
         notifyDataSetChanged();
-    }
-
-    private class ItemClickListener implements View.OnClickListener {
-
-        private String mZhihuTitle = null;
-
-        private String mZhihuId = null;
-
-        ItemClickListener(String zhihuTitle, String zhihuId) {
-            mZhihuTitle = zhihuTitle;
-            mZhihuId = zhihuId;
-        }
-
-        @Override
-        public void onClick(View view) {
-            Intent intent = new Intent(mContext, ZhihuActivity.class);
-            intent.putExtra(ZhihuActivity.ZHIHU_ID, mZhihuId);
-            intent.putExtra(ZhihuActivity.ZHIHU_TITLE, mZhihuTitle);
-            mContext.startActivity(intent);
-        }
     }
 
     class ZhihuViewHolder extends RecyclerView.ViewHolder {

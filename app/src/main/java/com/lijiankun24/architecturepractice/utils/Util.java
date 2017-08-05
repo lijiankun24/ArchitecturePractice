@@ -4,6 +4,11 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.text.TextUtils;
+import android.view.View;
+
+import com.lijiankun24.architecturepractice.MyApplication;
 
 /**
  * Util.java
@@ -23,6 +28,13 @@ public class Util {
             }
         }
         return false;
+    }
+
+    public static void showSnackbar(View parentView, String msg) {
+        if (TextUtils.isEmpty(msg)) {
+            return;
+        }
+        Snackbar.make(parentView, msg, Snackbar.LENGTH_LONG).show();
     }
 
     /**

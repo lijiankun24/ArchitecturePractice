@@ -10,18 +10,18 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.lijiankun24.architecturepractice.R;
 import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
-import com.lijiankun24.architecturepractice.ui.listener.OnGirlClickListener;
+import com.lijiankun24.architecturepractice.ui.listener.OnItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GirlListAdapter extends RecyclerView.Adapter<GirlListAdapter.ViewHolder> {
 
-    private OnGirlClickListener mGirlClickListener = null;
+    private OnItemClickListener<Girl> mGirlClickListener = null;
 
     private List<Girl> mGirlList = null;
 
-    public GirlListAdapter(OnGirlClickListener listener) {
+    public GirlListAdapter(OnItemClickListener<Girl> listener) {
         mGirlClickListener = listener;
         mGirlList = new ArrayList<>();
     }

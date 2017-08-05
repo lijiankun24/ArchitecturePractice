@@ -12,8 +12,10 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.lijiankun24.architecturepractice.MyApplication;
 import com.lijiankun24.architecturepractice.data.DataRepository;
 import com.lijiankun24.architecturepractice.data.local.db.entity.Girl;
+import com.lijiankun24.architecturepractice.utils.Util;
 
 import java.util.List;
 
@@ -24,7 +26,6 @@ import java.util.List;
  */
 
 public class GirlListViewModel extends AndroidViewModel {
-
 
     private final MutableLiveData<Integer> mGirlPageIndex = new MutableLiveData<>();
 
@@ -56,6 +57,9 @@ public class GirlListViewModel extends AndroidViewModel {
     }
 
     public void loadNextPageGirls() {
+        if (!Util.isNetworkConnected(MyApplication.getInstance())) {
+            return;
+        }
         mGirlPageIndex.setValue((mGirlPageIndex.getValue() == null ? 1 : mGirlPageIndex.getValue() + 1));
         mLoadHandler.mLoadMoreState.setValue(true);
         mLoadHandler.startLoadGirls();
