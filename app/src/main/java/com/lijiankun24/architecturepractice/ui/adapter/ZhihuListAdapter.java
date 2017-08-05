@@ -76,7 +76,7 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<ZhihuListAdapter.Zhih
 
         private String mZhihuId = null;
 
-        public ItemClickListener(String zhihuTitle, String zhihuId) {
+        ItemClickListener(String zhihuTitle, String zhihuId) {
             mZhihuTitle = zhihuTitle;
             mZhihuId = zhihuId;
         }

@@ -17,9 +17,9 @@ import java.util.List;
 
 public class GirlListAdapter extends RecyclerView.Adapter<GirlListAdapter.ViewHolder> {
 
-    private List<Girl> mGirlList = null;
-
     private OnGirlClickListener mGirlClickListener = null;
+
+    private List<Girl> mGirlList = null;
 
     public GirlListAdapter(OnGirlClickListener listener) {
         mGirlClickListener = listener;

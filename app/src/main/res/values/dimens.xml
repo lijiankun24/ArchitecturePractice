@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="ts_15">15sp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="statusbar_view_height">0dp</dimen>
 </resources>

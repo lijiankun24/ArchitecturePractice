@@ -3,7 +3,6 @@ package com.lijiankun24.architecturepractice.viewmodel;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
@@ -19,17 +18,11 @@ import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStoryDetail;
 
 public class ZhihuViewModel extends AndroidViewModel {
 
-    private static final MutableLiveData ABSENT = new MutableLiveData();
-
-    {
-        ABSENT.setValue(null);
-    }
+    private DataRepository mDataRepository = null;
 
     private final String mZhihuId;
 
-    private DataRepository mDataRepository = null;
-
-    public ZhihuViewModel(Application application, DataRepository dataRepository, String zhihuId) {
+    private ZhihuViewModel(Application application, DataRepository dataRepository, String zhihuId) {
         super(application);
         this.mZhihuId = zhihuId;
         mDataRepository = dataRepository;

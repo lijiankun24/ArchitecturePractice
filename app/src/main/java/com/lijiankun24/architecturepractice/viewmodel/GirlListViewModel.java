@@ -61,10 +61,6 @@ public class GirlListViewModel extends AndroidViewModel {
         mLoadHandler.startLoadGirls();
     }
 
-    public MutableLiveData<Integer> getGirlPageIndex() {
-        return mGirlPageIndex;
-    }
-
     public MutableLiveData<Boolean> getLoadMoreState() {
         return mLoadHandler.getLoadMoreState();
     }

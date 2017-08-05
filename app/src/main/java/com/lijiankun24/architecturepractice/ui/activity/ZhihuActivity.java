@@ -1,14 +1,11 @@
 package com.lijiankun24.architecturepractice.ui.activity;
 
-import android.arch.lifecycle.LifecycleRegistry;
-import android.arch.lifecycle.LifecycleRegistryOwner;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
@@ -22,26 +19,22 @@ import com.lijiankun24.architecturepractice.MyApplication;
 import com.lijiankun24.architecturepractice.R;
 import com.lijiankun24.architecturepractice.data.Injection;
 import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStoryDetail;
-import com.lijiankun24.architecturepractice.ui.widget.AppBarStateChangeListener;
+import com.lijiankun24.architecturepractice.ui.listener.AppBarStateChangeListener;
 import com.lijiankun24.architecturepractice.ui.widget.MarqueeText;
 import com.lijiankun24.architecturepractice.utils.WebUtil;
 import com.lijiankun24.architecturepractice.viewmodel.ZhihuViewModel;
 
-public class ZhihuActivity extends AppCompatActivity implements LifecycleRegistryOwner {
-
-    public static final String ZHIHU_ID = "zhihu_id";
+public class ZhihuActivity extends BaseActivity {
 
     public static final String ZHIHU_TITLE = "zhihu_title";
 
-    private final LifecycleRegistry mRegistry = new LifecycleRegistry(this);
-
-    private ZhihuViewModel mZhihuViewModel = null;
+    public static final String ZHIHU_ID = "zhihu_id";
 
     private ImageView mIVZhihuHeader = null;
 
-    private WebView mWebView = null;
-
     private String mZhihuTitle = null;
+
+    private WebView mWebView = null;
 
     private String mZhihuId = null;
 
@@ -54,16 +47,11 @@ public class ZhihuActivity extends AppCompatActivity implements LifecycleRegistr
         subscribeUI();
     }
 
-    @Override
-    public LifecycleRegistry getLifecycle() {
-        return mRegistry;
-    }
-
     private void subscribeUI() {
         ZhihuViewModel.Factory factory = new ZhihuViewModel.Factory(MyApplication.getInstance(),
                 Injection.getGirlsDataRepository(MyApplication.getInstance()), mZhihuId);
-        mZhihuViewModel = ViewModelProviders.of(this, factory).get(ZhihuViewModel.class);
-        mZhihuViewModel.getZhihuDetail().observe(this, new Observer<ZhihuStoryDetail>() {
+        ZhihuViewModel zhihuViewModel = ViewModelProviders.of(this, factory).get(ZhihuViewModel.class);
+        zhihuViewModel.getZhihuDetail().observe(this, new Observer<ZhihuStoryDetail>() {
             @Override
             public void onChanged(@Nullable ZhihuStoryDetail detail) {
                 if (detail == null) {
@@ -102,17 +90,14 @@ public class ZhihuActivity extends AppCompatActivity implements LifecycleRegistr
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         mWebView.setWebChromeClient(new WebChromeClient());
 
-        Toolbar toolbar = findViewById(R.id.tb_zhihu);
-        final MarqueeText marqueeText = findViewById(R.id.toolbar_title);
-        marqueeText.setText(mZhihuTitle);
+
         CollapsingToolbarLayout toolbarLayout = findViewById(R.id.collapsing_toolbar_layout);
-        toolbarLayout.setTitle(mZhihuTitle);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(mZhihuTitle);
-        }
+        final MarqueeText marqueeText = findViewById(R.id.toolbar_title);
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
+        Toolbar toolbar = findViewById(R.id.tb_zhihu);
+        initToolbar(toolbar, true, mZhihuTitle);
+        marqueeText.setText(mZhihuTitle);
+        toolbarLayout.setTitle(mZhihuTitle);
         appBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener(){
             @Override
             public void onStateChanged(AppBarLayout appBarLayout, State state) {
@@ -122,15 +107,9 @@ public class ZhihuActivity extends AppCompatActivity implements LifecycleRegistr
                 } else if (state == State.COLLAPSED) {
                     //折叠状态
                     marqueeText.setVisibility(View.VISIBLE);
-                } else {
-                    //中间状态
                 }
             }
         });
-    }
-
-    private void initToolbar() {
-
     }
 
     private void readIntent() {

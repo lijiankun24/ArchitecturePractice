@@ -1,7 +1,6 @@
 package com.lijiankun24.architecturepractice.ui.activity;
 
 import android.app.Activity;
-import android.arch.lifecycle.LifecycleActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -9,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -29,21 +27,19 @@ import java.util.Date;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-public class GirlActivity extends LifecycleActivity {
+public class GirlActivity extends BaseActivity {
 
     private static final String GIRL_IMG_URL = "girl_img_url";
 
-    private View mRLGirlRoot = null;
-
-    private View mStatusBar = null;
-
-    private Toolbar mToolbar = null;
+    private PhotoViewAttacher mPhotoViewAttacher;
 
     private Boolean mIsToolbarHidden = false;
 
-    private PhotoViewAttacher mPhotoViewAttacher;
-
     private String mGirlImgUrl = null;
+
+    private Toolbar mToolbar = null;
+
+    private View mRLGirlRoot = null;
 
     public static void startGirlActivity(Activity activity, String girlUrl) {
         if (activity == null || TextUtils.isEmpty(girlUrl)) {
@@ -70,8 +66,6 @@ public class GirlActivity extends LifecycleActivity {
     }
 
     private void initView() {
-        mStatusBar = findViewById(R.id.fake_status_bar);
-        mStatusBar.setBackgroundColor(ContextCompat.getColor(GirlActivity.this, android.R.color.black));
 
         PhotoView photoView = findViewById(R.id.photoView);
         mPhotoViewAttacher = new PhotoViewAttacher(photoView);
@@ -96,6 +90,8 @@ public class GirlActivity extends LifecycleActivity {
                 .into(photoView);
 
         mToolbar = findViewById(R.id.toolbar);
+        initToolbar(mToolbar, true, R.string.girl_title);
+
         mRLGirlRoot = findViewById(R.id.rl_girl_root);
     }
 
@@ -147,7 +143,7 @@ public class GirlActivity extends LifecycleActivity {
 
     private void toggleToolbar() {
         mToolbar.animate()
-                .translationY(mIsToolbarHidden ? 0 : -(mToolbar.getHeight() + mStatusBar.getHeight()))
+                .translationY(mIsToolbarHidden ? 0 : -mToolbar.getHeight())
                 .setInterpolator(new DecelerateInterpolator(2))
                 .start();
         mIsToolbarHidden = !mIsToolbarHidden;

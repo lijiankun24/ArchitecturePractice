@@ -1,21 +1,17 @@
 package com.lijiankun24.architecturepractice.ui.activity;
 
-import android.arch.lifecycle.LifecycleActivity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.widget.LinearLayout;
+import android.support.v7.widget.Toolbar;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
-import com.jaeger.library.StatusBarUtil;
 import com.lijiankun24.architecturepractice.R;
 import com.lijiankun24.architecturepractice.ui.fragment.GirlListFragment;
 import com.lijiankun24.architecturepractice.ui.fragment.ZhihuListFragment;
-import com.lijiankun24.architecturepractice.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,23 +22,20 @@ import java.util.List;
  * <p>
  * Created by lijiankun on 17/7/4.
  */
-public class MainActivity extends LifecycleActivity {
-
-    private ViewPager mViewPager = null;
+public class MainActivity extends BaseActivity {
 
     private List<Fragment> mFragmentList = new ArrayList<>();
+
+    private ViewPager mViewPager = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         initView();
     }
 
     private void initView() {
-        initStatusBar();
-
         mFragmentList.add(new GirlListFragment());
         mFragmentList.add(new ZhihuListFragment());
 
@@ -54,18 +47,9 @@ public class MainActivity extends LifecycleActivity {
         navigationBar.addItem(new BottomNavigationItem(R.drawable.ic_favorite, "Girl"))
                 .addItem(new BottomNavigationItem(R.drawable.ic_grade, "Zhihu"))
                 .initialise();
-    }
 
-    private void initStatusBar() {
-        int statusBarHeight = Util.getStatusBarHeight(MainActivity.this);
-        if (statusBarHeight == -1) {
-            return;
-        }
-        View fakeStatusBar = findViewById(R.id.fake_status_bar);
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) fakeStatusBar.getLayoutParams();
-        params.height = statusBarHeight;
-        fakeStatusBar.setLayoutParams(params);
-        StatusBarUtil.setTranslucentForImageViewInFragment(MainActivity.this, null);
+        Toolbar toolbar = findViewById(R.id.tool_bar);
+        initToolbar(toolbar, false, R.string.app_name);
     }
 
     private class MainOnTabSelectedListener implements BottomNavigationBar.OnTabSelectedListener {

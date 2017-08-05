@@ -33,7 +33,7 @@ public class ZhihuListViewModel extends AndroidViewModel {
 
     private DataRepository mDataRepository = null;
 
-    public ZhihuListViewModel(Application application, DataRepository dataRepository) {
+    private ZhihuListViewModel(Application application, DataRepository dataRepository) {
         super(application);
         mDataRepository = dataRepository;
         mLoadHandler = new LoadHandler(mDataRepository);

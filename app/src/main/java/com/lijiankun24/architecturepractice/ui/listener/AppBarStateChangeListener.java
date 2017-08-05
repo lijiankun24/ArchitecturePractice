@@ -1,4 +1,4 @@
-package com.lijiankun24.architecturepractice.ui.widget;
+package com.lijiankun24.architecturepractice.ui.listener;
 
 import android.support.design.widget.AppBarLayout;
 
