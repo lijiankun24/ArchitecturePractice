@@ -35,6 +35,7 @@ import java.util.List;
 
 public class ZhihuListFragment extends LifecycleFragment {
 
+    // ZhihuListFragment 所对应的 ViewModel 类的对象
     private ZhihuListViewModel mListViewModel = null;
 
     private SwipeRefreshLayout mRefreshLayout = null;
@@ -45,6 +46,7 @@ public class ZhihuListFragment extends LifecycleFragment {
 
     private View mRLZhihuRoot = null;
 
+    // 自定义接口，将 RecyclerView 的 Adapter 对其中每个 Item 的点击事件会传到 ZhihuListFragment 中。
     private final OnItemClickListener<ZhihuStory> mZhihuOnItemClickListener =
             new OnItemClickListener<ZhihuStory>() {
                 @Override
@@ -72,7 +74,12 @@ public class ZhihuListFragment extends LifecycleFragment {
         subscribeUI();
     }
 
+    /**
+     * 将 ZhihuListFragment 对应的 ZhihuListViewModel 类中的 LiveData 添加注册监听到
+     * 此 ZhihuListFragment
+     */
     private void subscribeUI() {
+        // 通过 ViewModelProviders 创建对应的 ZhihuListViewModel 对象
         ZhihuListViewModel.Factory factory = new ZhihuListViewModel
                 .Factory(MyApplication.getInstance()
                 , Injection.getDataRepository(MyApplication.getInstance()));
@@ -101,6 +108,11 @@ public class ZhihuListFragment extends LifecycleFragment {
         mListViewModel.refreshZhihusData();
     }
 
+    /**
+     * 初始化页面 UI
+     *
+     * @param view Fragment 的 View
+     */
     private void initView(View view) {
         if (view == null) {
             return;
@@ -124,6 +136,9 @@ public class ZhihuListFragment extends LifecycleFragment {
         mRLZhihuRoot = view.findViewById(R.id.rl_zhihu_root);
     }
 
+    /**
+     * ZhihuSwipeListener 用于 SwipeRefreshLayout 下拉刷新操作
+     */
     private class ZhihuSwipeListener implements SwipeRefreshLayout.OnRefreshListener {
         @Override
         public void onRefresh() {
@@ -132,6 +147,9 @@ public class ZhihuListFragment extends LifecycleFragment {
         }
     }
 
+    /**
+     * ZhihuOnScrollListener 用于 RecyclerView 下拉到最低端时的上拉加载更多操作
+     */
     private class ZhihuOnScrollListener extends RecyclerView.OnScrollListener {
 
         @Override
@@ -142,7 +160,7 @@ public class ZhihuListFragment extends LifecycleFragment {
                     .findLastCompletelyVisibleItemPosition();
             if (lastPosition == mAdapter.getItemCount() - 1) {
                 // 上拉加载更多数据
-                mListViewModel.loadNextPageZhihu();
+                mListViewModel.loadNextPageZhihu(lastPosition);
             }
         }
     }

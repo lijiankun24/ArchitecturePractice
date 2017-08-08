@@ -5,12 +5,10 @@ import android.arch.core.util.Function;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.lijiankun24.architecturepractice.MyApplication;
 import com.lijiankun24.architecturepractice.data.DataRepository;
@@ -27,18 +25,19 @@ import java.util.List;
 
 public class ZhihuListViewModel extends AndroidViewModel {
 
+    // 请求接口中查询的日期参数
     private MutableLiveData<String> mZhihuPageDate = new MutableLiveData<>();
 
+    // Zhihu 列表的数据
     private final LiveData<List<ZhihuStory>> mZhihuList;
 
-    private LoadHandler mLoadHandler = null;
-
+    // 数据源
     private DataRepository mDataRepository = null;
 
     private ZhihuListViewModel(Application application, DataRepository dataRepository) {
         super(application);
         mDataRepository = dataRepository;
-        mLoadHandler = new LoadHandler(mDataRepository);
+        // 使用 Transformations.switchMap() 方法，当 View 改变 mZhihuPageDate 参数的值时，则进行 zhihu 列表数据的请求
         mZhihuList = Transformations.switchMap(mZhihuPageDate, new Function<String, LiveData<List<ZhihuStory>>>() {
             @Override
             public LiveData<List<ZhihuStory>> apply(String input) {
@@ -47,62 +46,41 @@ public class ZhihuListViewModel extends AndroidViewModel {
         });
     }
 
+    /**
+     * 获取 Zhihu 列表数据
+     *
+     * @return Zhihu 列表数据
+     */
     public LiveData<List<ZhihuStory>> getZhihuList() {
         return mZhihuList;
     }
 
+    /**
+     * 数据请求状态由 DataRepository 控制，包括下拉刷新和上拉加载更多
+     *
+     * @return 是否在进行数据请求
+     */
+    public LiveData<Boolean> isLoadingZhihuList() {
+        return mDataRepository.isLoadingZhihuList();
+    }
+
+    /**
+     * 下拉刷新，获取最新的 Zhihu 列表数据
+     */
     public void refreshZhihusData() {
-        mLoadHandler.startLoadGirls();
         mZhihuPageDate.setValue("today");
     }
 
-    public void loadNextPageZhihu() {
+    /**
+     * 上拉加载更多时，获取 Zhihu 历史列表数据
+     *
+     * @param positon 表示列表滑动到最后一项
+     */
+    public void loadNextPageZhihu(int positon) {
         if (!Util.isNetworkConnected(MyApplication.getInstance())) {
             return;
         }
-        mLoadHandler.startLoadGirls();
-        mZhihuPageDate.setValue(String.valueOf(System.currentTimeMillis()));
-    }
-
-    public LiveData<Boolean> isLoadingZhihuList() {
-        return mLoadHandler.getLoadMoreState();
-    }
-
-    private static class LoadHandler implements Observer<Boolean> {
-
-        private final MutableLiveData<Boolean> mLoadMoreState;
-
-        private LiveData<Boolean> mIsLoadingZhihuList = null;
-
-        private DataRepository mDataRepository = null;
-
-        private LoadHandler(DataRepository girlsDataRepository) {
-            mDataRepository = girlsDataRepository;
-            mLoadMoreState = new MutableLiveData<>();
-        }
-
-        private void startLoadGirls() {
-            unregister();
-            mIsLoadingZhihuList = mDataRepository.isLoadingZhihuList();
-            mIsLoadingZhihuList.observeForever(this);
-            mLoadMoreState.setValue(true);
-        }
-
-        @Override
-        public void onChanged(@Nullable Boolean aBoolean) {
-            mLoadMoreState.setValue(false);
-        }
-
-        private void unregister() {
-            if (mIsLoadingZhihuList != null) {
-                mIsLoadingZhihuList.removeObserver(this);
-                mIsLoadingZhihuList = null;
-            }
-        }
-
-        private MutableLiveData<Boolean> getLoadMoreState() {
-            return mLoadMoreState;
-        }
+        mZhihuPageDate.setValue(String.valueOf(positon));
     }
 
     public static class Factory extends ViewModelProvider.NewInstanceFactory {
