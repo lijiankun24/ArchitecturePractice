@@ -41,6 +41,8 @@ public class GirlActivity extends BaseActivity {
 
     private View mRLGirlRoot = null;
 
+    private View mStatusBar = null;
+
     public static void startGirlActivity(Activity activity, String girlUrl) {
         if (activity == null || TextUtils.isEmpty(girlUrl)) {
             return;
@@ -93,6 +95,7 @@ public class GirlActivity extends BaseActivity {
         initToolbar(mToolbar, true, R.string.girl_title);
 
         mRLGirlRoot = findViewById(R.id.rl_girl_root);
+        mStatusBar = findViewById(R.id.fake_status_bar);
     }
 
     private void showSaveGirlDialog() {
@@ -135,7 +138,7 @@ public class GirlActivity extends BaseActivity {
 
     private void toggleToolbar() {
         mToolbar.animate()
-                .translationY(mIsToolbarHidden ? 0 : -mToolbar.getHeight())
+                .translationY(mIsToolbarHidden ? 0 : -(mToolbar.getHeight() + mStatusBar.getHeight()))
                 .setInterpolator(new DecelerateInterpolator(2))
                 .start();
         mIsToolbarHidden = !mIsToolbarHidden;

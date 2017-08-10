@@ -105,10 +105,10 @@ public class ZhihuActivity extends BaseActivity {
         mWebView.setWebChromeClient(new WebChromeClient());
 
 
-        CollapsingToolbarLayout toolbarLayout = findViewById(R.id.collapsing_toolbar_layout);
+        final CollapsingToolbarLayout toolbarLayout = findViewById(R.id.collapsing_toolbar_layout);
         final MarqueeText marqueeText = findViewById(R.id.toolbar_title);
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
-        Toolbar toolbar = findViewById(R.id.tb_zhihu);
+        final Toolbar toolbar = findViewById(R.id.tb_zhihu);
         initToolbar(toolbar, true, mZhihuTitle);
         marqueeText.setText(mZhihuTitle);
         toolbarLayout.setTitle(mZhihuTitle);

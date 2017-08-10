@@ -74,7 +74,7 @@
         android:paddingLeft="48dp"
         android:paddingRight="48dp"
         android:paddingStart="48dp"
-        android:text="This is a demo for me to practice Bottom Sheet and I hope this demo could help you,too.  \n---- lijiankun24"
+        android:text="This is a demo for me to practice architecture components and I hope this demo could help you,too.  \n---- lijiankun24"
         android:textColor="@android:color/darker_gray"
         android:textSize="14sp"/>
 </LinearLayout>
