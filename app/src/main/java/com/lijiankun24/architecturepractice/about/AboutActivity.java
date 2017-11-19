@@ -56,27 +56,27 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void initView() {
-        TextView tvGithub = findViewById(R.id.tv_github);
+        TextView tvGithub = (TextView) findViewById(R.id.tv_github);
         tvGithub.setText(Html.fromHtml(getString(R.string.about_github, mAuthor.getGithub())));
         tvGithub.setOnClickListener(this);
 
-        TextView tvWeibo = findViewById(R.id.tv_weibo);
+        TextView tvWeibo = (TextView) findViewById(R.id.tv_weibo);
         tvWeibo.setText(Html.fromHtml(getString(R.string.about_weibo, mAuthor.getWeibo())));
         tvWeibo.setOnClickListener(this);
 
-        TextView tvBlog = findViewById(R.id.tv_blog);
+        TextView tvBlog = (TextView) findViewById(R.id.tv_blog);
         tvBlog.setText(Html.fromHtml(getString(R.string.about_blog, mAuthor.getBlog())));
         tvBlog.setOnClickListener(this);
 
-        TextView tvJianshu = findViewById(R.id.tv_jianshu);
+        TextView tvJianshu = (TextView) findViewById(R.id.tv_jianshu);
         tvJianshu.setText(Html.fromHtml(getString(R.string.about_jianshu, mAuthor.getJianshu())));
         tvJianshu.setOnClickListener(this);
 
-        TextView tvMail = findViewById(R.id.tv_mail);
+        TextView tvMail = (TextView) findViewById(R.id.tv_mail);
         tvMail.setText(Html.fromHtml(getString(R.string.about_mail, mAuthor.getMail())));
         tvMail.setOnClickListener(this);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         initToolbar(toolbar, true, R.string.about_activity_title);
     }
 

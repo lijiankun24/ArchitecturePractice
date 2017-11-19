@@ -39,16 +39,16 @@ public class MainActivity extends BaseActivity {
         mFragmentList.add(new GirlListFragment());
         mFragmentList.add(new ZhihuListFragment());
 
-        mViewPager = findViewById(R.id.vp_home);
+        mViewPager = (ViewPager) findViewById(R.id.vp_home);
         mViewPager.setAdapter(new MainFragmentPagerAdapter(getSupportFragmentManager()));
 
-        BottomNavigationBar navigationBar = findViewById(R.id.bottom_navigation_bar);
+        BottomNavigationBar navigationBar = (BottomNavigationBar)findViewById(R.id.bottom_navigation_bar);
         navigationBar.setTabSelectedListener(new MainOnTabSelectedListener());
         navigationBar.addItem(new BottomNavigationItem(R.drawable.ic_favorite, "Girl"))
                 .addItem(new BottomNavigationItem(R.drawable.ic_grade, "Zhihu"))
                 .initialise();
 
-        Toolbar toolbar = findViewById(R.id.tool_bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         initToolbar(toolbar, false, R.string.app_name);
     }
 

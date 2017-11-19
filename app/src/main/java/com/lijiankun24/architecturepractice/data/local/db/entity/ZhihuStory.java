@@ -2,6 +2,7 @@ package com.lijiankun24.architecturepractice.data.local.db.entity;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 /**
  * ZhihuStory.java
@@ -11,6 +12,7 @@ import android.arch.persistence.room.PrimaryKey;
 @Entity(tableName = "zhihustorys")
 public class ZhihuStory {
 
+    @NonNull
     @PrimaryKey
     private String id;
 

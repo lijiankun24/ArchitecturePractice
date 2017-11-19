@@ -89,9 +89,9 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<ZhihuListAdapter.Zhih
         private ZhihuViewHolder(View itemView) {
             super(itemView);
             mLLZhihu = itemView.findViewById(R.id.ll_zhihu);
-            mTVZhihuTitle = itemView.findViewById(R.id.tv_zhihu_title);
-            mTVZhihuTime = itemView.findViewById(R.id.tv_zhihu_time);
-            mIVZhihu = itemView.findViewById(R.id.iv_zhihu);
+            mTVZhihuTitle = (TextView) itemView.findViewById(R.id.tv_zhihu_title);
+            mTVZhihuTime = (TextView) itemView.findViewById(R.id.tv_zhihu_time);
+            mIVZhihu = (ImageView) itemView.findViewById(R.id.iv_zhihu);
         }
 
         private View getLLZhihu() {

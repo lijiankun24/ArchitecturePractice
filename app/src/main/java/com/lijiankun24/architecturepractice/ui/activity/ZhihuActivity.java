@@ -23,7 +23,6 @@ import com.lijiankun24.architecturepractice.data.Injection;
 import com.lijiankun24.architecturepractice.data.remote.model.ZhihuStoryDetail;
 import com.lijiankun24.architecturepractice.ui.listener.AppBarStateChangeListener;
 import com.lijiankun24.architecturepractice.ui.widget.MarqueeText;
-import com.lijiankun24.architecturepractice.utils.WebUtil;
 import com.lijiankun24.architecturepractice.viewmodel.ZhihuViewModel;
 
 public class ZhihuActivity extends BaseActivity {
@@ -75,22 +74,23 @@ public class ZhihuActivity extends BaseActivity {
                         .load(detail.getImage())
                         .centerCrop()
                         .into(mIVZhihuHeader);
-                if (TextUtils.isEmpty(detail.getBody())) {
+                mWebView.loadUrl(detail.getShare_url());
+/*                if (TextUtils.isEmpty(detail.getBody())) {
                     mWebView.loadUrl(detail.getShare_url());
                 } else {
                     String body = detail.getBody();
                     String[] cssList = detail.getCss();
                     String htmlTemp = WebUtil.buildHtmlWithCss(body, cssList, false);
                     mWebView.loadDataWithBaseURL(WebUtil.BASE_URL, htmlTemp, WebUtil.MIME_TYPE, WebUtil.ENCODING, WebUtil.FAIL_URL);
-                }
+                }*/
             }
         });
     }
 
     private void initView() {
-        mIVZhihuHeader = findViewById(R.id.iv_zhihu_head);
+        mIVZhihuHeader = (ImageView) findViewById(R.id.iv_zhihu_head);
 
-        mWebView = findViewById(R.id.wv_zhihu);
+        mWebView = (WebView) findViewById(R.id.wv_zhihu);
         WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
@@ -105,10 +105,10 @@ public class ZhihuActivity extends BaseActivity {
         mWebView.setWebChromeClient(new WebChromeClient());
 
 
-        final CollapsingToolbarLayout toolbarLayout = findViewById(R.id.collapsing_toolbar_layout);
-        final MarqueeText marqueeText = findViewById(R.id.toolbar_title);
-        AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
-        final Toolbar toolbar = findViewById(R.id.tb_zhihu);
+        final CollapsingToolbarLayout toolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapsing_toolbar_layout);
+        final MarqueeText marqueeText = (MarqueeText)findViewById(R.id.toolbar_title);
+        AppBarLayout appBarLayout = (AppBarLayout)findViewById(R.id.app_bar_layout);
+        final Toolbar toolbar = (Toolbar)findViewById(R.id.tb_zhihu);
         initToolbar(toolbar, true, mZhihuTitle);
         marqueeText.setText(mZhihuTitle);
         toolbarLayout.setTitle(mZhihuTitle);

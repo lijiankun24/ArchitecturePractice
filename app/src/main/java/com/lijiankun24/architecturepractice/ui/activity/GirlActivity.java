@@ -69,7 +69,7 @@ public class GirlActivity extends BaseActivity {
 
     private void initView() {
 
-        PhotoView photoView = findViewById(R.id.photoView);
+        PhotoView photoView = (PhotoView)findViewById(R.id.photoView);
         mPhotoViewAttacher = new PhotoViewAttacher(photoView);
         mPhotoViewAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
             @Override
@@ -91,7 +91,7 @@ public class GirlActivity extends BaseActivity {
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(photoView);
 
-        mToolbar = findViewById(R.id.toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         initToolbar(mToolbar, true, R.string.girl_title);
 
         mRLGirlRoot = findViewById(R.id.rl_girl_root);

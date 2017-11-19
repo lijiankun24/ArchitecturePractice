@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -80,9 +81,9 @@ public class GirlListAdapter extends RecyclerView.Adapter<GirlListAdapter.ViewHo
         ViewHolder(View view) {
             super(view);
             mRoot = view.findViewById(R.id.rl_girl_item_root);
-            mTVGirlName = view.findViewById(R.id.tv_girl_name);
-            mTVGirlAge = view.findViewById(R.id.tv_girl_age);
-            mIVGirlAvatar = view.findViewById(R.id.iv_girl_avatar);
+            mTVGirlName = (TextView) view.findViewById(R.id.tv_girl_name);
+            mTVGirlAge = (TextView)view.findViewById(R.id.tv_girl_age);
+            mIVGirlAvatar = (ImageView) view.findViewById(R.id.iv_girl_avatar);
         }
 
         private View getRoot() {

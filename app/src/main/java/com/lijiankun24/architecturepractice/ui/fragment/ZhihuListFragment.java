@@ -119,12 +119,12 @@ public class ZhihuListFragment extends LifecycleFragment {
         }
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         mAdapter = new ZhihuListAdapter(getContext(), mZhihuOnItemClickListener);
-        RecyclerView recyclerView = view.findViewById(R.id.rv_zhihu_list);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.rv_zhihu_list);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addOnScrollListener(new ZhihuOnScrollListener());
 
-        mRefreshLayout = view.findViewById(R.id.srl_zhihu);
+        mRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.srl_zhihu);
         mRefreshLayout.setOnRefreshListener(new ZhihuSwipeListener());
         mRefreshLayout.setColorSchemeResources(
                 android.R.color.holo_blue_bright,
@@ -132,7 +132,7 @@ public class ZhihuListFragment extends LifecycleFragment {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        mLoadMorebar = view.findViewById(R.id.bar_load_more_zhihu);
+        mLoadMorebar = (ProgressBar) view.findViewById(R.id.bar_load_more_zhihu);
         mRLZhihuRoot = view.findViewById(R.id.rl_zhihu_root);
     }
 

@@ -8,8 +8,6 @@ import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.lijiankun24.architecturepractice.MyApplication;
-
 /**
  * Util.java
  * <p>

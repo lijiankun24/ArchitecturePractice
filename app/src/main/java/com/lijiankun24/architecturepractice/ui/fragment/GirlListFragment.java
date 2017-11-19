@@ -111,7 +111,7 @@ public class GirlListFragment extends LifecycleFragment {
     private void initView(View view) {
         Context context = view.getContext();
 
-        RecyclerView recyclerView = view.findViewById(R.id.rv_girl_list);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.rv_girl_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context,
                 LinearLayoutManager.VERTICAL, false));
         mGirlListAdapter = new GirlListAdapter(mGirlClickListener);
@@ -130,7 +130,7 @@ public class GirlListFragment extends LifecycleFragment {
             }
         });
 
-        mRefreshLayout = view.findViewById(R.id.srl);
+        mRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.srl);
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -144,7 +144,7 @@ public class GirlListFragment extends LifecycleFragment {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        mLoadMorebar = view.findViewById(R.id.load_more_bar);
+        mLoadMorebar = (ProgressBar)view.findViewById(R.id.load_more_bar);
         RLGirlRoot = view.findViewById(R.id.rl_girl_root);
     }
 }
