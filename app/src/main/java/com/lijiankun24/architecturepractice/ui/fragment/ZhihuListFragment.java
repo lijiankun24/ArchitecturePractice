@@ -1,11 +1,11 @@
 package com.lijiankun24.architecturepractice.ui.fragment;
 
 
-import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,7 +33,7 @@ import java.util.List;
  * Created by lijiankun on 17/7/30.
  */
 
-public class ZhihuListFragment extends LifecycleFragment {
+public class ZhihuListFragment extends Fragment {
 
     // ZhihuListFragment 所对应的 ViewModel 类的对象
     private ZhihuListViewModel mListViewModel = null;
@@ -83,7 +83,7 @@ public class ZhihuListFragment extends LifecycleFragment {
         ZhihuListViewModel.Factory factory = new ZhihuListViewModel
                 .Factory(MyApplication.getInstance()
                 , Injection.getDataRepository(MyApplication.getInstance()));
-        mListViewModel = ViewModelProviders.of(this, factory).get(ZhihuListViewModel.class);
+        mListViewModel = ViewModelProviders.of(ZhihuListFragment.this, factory).get(ZhihuListViewModel.class);
         mListViewModel.getZhihuList().observe(this, new Observer<List<ZhihuStory>>() {
             @Override
             public void onChanged(@Nullable List<ZhihuStory> stories) {
@@ -117,8 +117,8 @@ public class ZhihuListFragment extends LifecycleFragment {
         if (view == null) {
             return;
         }
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new ZhihuListAdapter(getContext(), mZhihuOnItemClickListener);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        mAdapter = new ZhihuListAdapter(getActivity(), mZhihuOnItemClickListener);
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.rv_zhihu_list);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(layoutManager);

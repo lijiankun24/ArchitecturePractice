@@ -1,12 +1,12 @@
 package com.lijiankun24.architecturepractice.ui.fragment;
 
 import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,7 +33,7 @@ import java.util.List;
  * <p>
  * Created by lijiankun on 17/7/4.
  */
-public class GirlListFragment extends LifecycleFragment {
+public class GirlListFragment extends Fragment{
 
     private GirlListViewModel mGirlListViewModel = null;
 

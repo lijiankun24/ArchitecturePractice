@@ -1,7 +1,5 @@
 package com.lijiankun24.architecturepractice.ui.activity;
 
-import android.arch.lifecycle.LifecycleRegistry;
-import android.arch.lifecycle.LifecycleRegistryOwner;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,15 +15,7 @@ import com.lijiankun24.architecturepractice.about.AboutActivity;
  * Created by lijiankun on 17/8/5.
  */
 
-public class BaseActivity extends AppCompatActivity implements LifecycleRegistryOwner,
-        Toolbar.OnMenuItemClickListener {
-
-    private final LifecycleRegistry mRegistry = new LifecycleRegistry(this);
-
-    @Override
-    public LifecycleRegistry getLifecycle() {
-        return mRegistry;
-    }
+public class BaseActivity extends AppCompatActivity implements Toolbar.OnMenuItemClickListener {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
